@@ -3,12 +3,11 @@ package com.themescaline.moneytransfer.web;
 import com.themescaline.moneytransfer.config.BeanHelper;
 import com.themescaline.moneytransfer.model.Account;
 import com.themescaline.moneytransfer.service.AccountService;
-import javax.servlet.http.HttpServlet;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @Path("/v1/accounts")
-public class AccountsServlet extends HttpServlet {
+public class AccountsServlet {
     private final AccountService accountService = BeanHelper.getBean(AccountService.class);
 
     @GET
