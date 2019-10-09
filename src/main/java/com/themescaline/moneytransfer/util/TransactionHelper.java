@@ -7,7 +7,7 @@ import org.hibernate.Transaction;
 
 @Slf4j
 public class TransactionHelper {
-    public <T> T transactionalExecute(TransactionalExecutor<T> transactionalExecutor) {
+    public static <T> T transactionalExecute(TransactionalExecutor<T> transactionalExecutor) {
         T result = null;
         Transaction transaction = null;
         try (Session session = HibernateSessionFactory.getSessionFactory().openSession()) {
@@ -19,6 +19,7 @@ public class TransactionHelper {
             if (transaction != null) {
                 transaction.rollback();
             }
+
         }
         return result;
     }

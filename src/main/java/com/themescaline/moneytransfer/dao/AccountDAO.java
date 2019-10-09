@@ -1,7 +1,6 @@
 package com.themescaline.moneytransfer.dao;
 
 import com.themescaline.moneytransfer.model.Account;
-
 import java.util.List;
 
 public interface AccountDAO {
@@ -13,9 +12,9 @@ public interface AccountDAO {
 
     Account update(long accountId, Account account);
 
-    Boolean delete(long accountId);
+    boolean delete(long accountId);
 
-    Boolean doTransfer(long fromAccountId, long toAccountId, double amount);
+    boolean doTransfer(long fromAccountId, long toAccountId, double amount);
 
     void clear();
 }

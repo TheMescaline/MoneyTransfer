@@ -3,8 +3,6 @@ package com.themescaline.moneytransfer.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Range;
-
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -28,10 +26,9 @@ public class Account {
     private Long id;
 
     @Column(name = "balance")
-    @Range
     private Double balance;
 
-    public Account(@Range Double balance) {
+    public Account(Double balance) {
         this.balance = balance;
     }
 

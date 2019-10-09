@@ -7,6 +7,6 @@ import com.themescaline.moneytransfer.dao.HibernateAccountDAO;
 public class AccountModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(AccountDAO.class).to(HibernateAccountDAO.class);
+        bind(AccountDAO.class).to(HibernateAccountDAO.class).asEagerSingleton();
     }
 }
