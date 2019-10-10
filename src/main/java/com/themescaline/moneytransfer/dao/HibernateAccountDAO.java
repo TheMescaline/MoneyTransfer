@@ -4,6 +4,7 @@ import com.google.inject.Singleton;
 import com.themescaline.moneytransfer.model.Account;
 import com.themescaline.moneytransfer.util.TransactionHelper;
 import lombok.extern.slf4j.Slf4j;
+
 import javax.persistence.LockModeType;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class HibernateAccountDAO implements AccountDAO {
             boolean transferResult = false;
             Account fromAccount = session.find(Account.class, fromAccountId, LockModeType.PESSIMISTIC_WRITE);
             Account toAccount = session.find(Account.class, toAccountId, LockModeType.PESSIMISTIC_WRITE);
-            if (fromAccount != null && toAccount != null && amount >= 0 && fromAccount.getBalance() >= amount ) {
+            if (fromAccount != null && toAccount != null && amount >= 0 && fromAccount.getBalance() >= amount) {
                 fromAccount.setBalance(fromAccount.getBalance() - amount);
                 session.merge(fromAccount);
                 toAccount.setBalance(toAccount.getBalance() + amount);

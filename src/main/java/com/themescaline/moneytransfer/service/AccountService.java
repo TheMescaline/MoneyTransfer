@@ -2,6 +2,7 @@ package com.themescaline.moneytransfer.service;
 
 import com.google.inject.ImplementedBy;
 import com.themescaline.moneytransfer.model.Account;
+
 import java.util.List;
 
 @ImplementedBy(AccountServiceImpl.class)

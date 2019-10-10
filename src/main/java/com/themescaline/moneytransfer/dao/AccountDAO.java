@@ -1,6 +1,7 @@
 package com.themescaline.moneytransfer.dao;
 
 import com.themescaline.moneytransfer.model.Account;
+
 import java.util.List;
 
 public interface AccountDAO {
