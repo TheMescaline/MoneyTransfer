@@ -3,13 +3,14 @@ package com.themescaline.moneytransfer.web;
 import com.themescaline.moneytransfer.config.BeanHelper;
 import com.themescaline.moneytransfer.model.TransferInfoPacket;
 import com.themescaline.moneytransfer.service.TransferService;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-@Path("/v1/transfer")
-public class MoneyTransferServlet {
+@Path("v1/transfer")
+public class MoneyTransferResource {
     private final TransferService transferService = BeanHelper.getBean(TransferService.class);
 
     @PUT
