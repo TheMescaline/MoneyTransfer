@@ -3,6 +3,7 @@ package com.themescaline.moneytransfer.dao;
 import com.google.inject.Singleton;
 import com.themescaline.moneytransfer.model.Account;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -31,7 +32,7 @@ public class InMemoryAccountDAO implements AccountDAO {
             account.setId(counter.incrementAndGet());
         }
 
-        if (null != storage.putIfAbsent(account.getId(), account)) {
+        if (account.getBalance() < 0 || null != storage.putIfAbsent(account.getId(), account)) {
             return null;
         }
         return account;

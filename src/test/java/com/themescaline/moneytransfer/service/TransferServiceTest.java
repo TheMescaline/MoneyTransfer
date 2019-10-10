@@ -12,9 +12,6 @@ import static com.themescaline.moneytransfer.TestAccountData.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TransferServiceTest {
-    private final static double NORMAL_TRANSFER_AMOUNT = 5000.0;
-    private final static double EXCEEDED_TRANSFER_AMOUNT = 1_000_000_000.0;
-
     private Injector injector = Guice.createInjector(new TestAccountModule());
     private TransferService transferService = injector.getInstance(TransferService.class);
     private AccountService accountService = injector.getInstance(AccountService.class);
@@ -28,15 +25,15 @@ class TransferServiceTest {
 
     @Test
     void doTransferSuccess() {
-        assertTrue(transferService.doTransfer(new TransferInfoPacket(EXISTED_FIRST.getId(), EXISTED_SECOND.getId(), NORMAL_TRANSFER_AMOUNT)));
-        assertEquals(accountService.getOne(EXISTED_FIRST.getId()).getBalance(), EXISTED_FIRST.getBalance() - NORMAL_TRANSFER_AMOUNT);
-        assertEquals(accountService.getOne(EXISTED_SECOND.getId()).getBalance(), EXISTED_SECOND.getBalance() + NORMAL_TRANSFER_AMOUNT);
+        assertTrue(transferService.doTransfer(new TransferInfoPacket(EXISTING_FIRST.getId(), EXISTING_SECOND.getId(), NORMAL_TRANSFER_AMOUNT)));
+        assertEquals(accountService.getOne(EXISTING_FIRST.getId()).getBalance(), EXISTING_FIRST.getBalance() - NORMAL_TRANSFER_AMOUNT);
+        assertEquals(accountService.getOne(EXISTING_SECOND.getId()).getBalance(), EXISTING_SECOND.getBalance() + NORMAL_TRANSFER_AMOUNT);
     }
 
     @Test
     void doTransferFailure() {
-        assertFalse(transferService.doTransfer(new TransferInfoPacket(EXISTED_FIRST.getId(), EXISTED_SECOND.getId(), EXCEEDED_TRANSFER_AMOUNT)));
-        assertEquals(accountService.getOne(EXISTED_FIRST.getId()).getBalance(), EXISTED_FIRST.getBalance());
-        assertEquals(accountService.getOne(EXISTED_SECOND.getId()).getBalance(), EXISTED_SECOND.getBalance());
+        assertFalse(transferService.doTransfer(new TransferInfoPacket(EXISTING_FIRST.getId(), EXISTING_SECOND.getId(), EXCEEDED_TRANSFER_AMOUNT)));
+        assertEquals(accountService.getOne(EXISTING_FIRST.getId()).getBalance(), EXISTING_FIRST.getBalance());
+        assertEquals(accountService.getOne(EXISTING_SECOND.getId()).getBalance(), EXISTING_SECOND.getBalance());
     }
 }

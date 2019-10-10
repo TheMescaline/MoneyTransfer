@@ -2,18 +2,16 @@ package com.themescaline.moneytransfer.service;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.themescaline.moneytransfer.TestAccountData;
 import com.themescaline.moneytransfer.config.TestAccountModule;
 import com.themescaline.moneytransfer.model.Account;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.util.Arrays;
 import java.util.Collections;
 
 import static com.themescaline.moneytransfer.TestAccountData.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class AccountServiceTest {
     private Injector injector = Guice.createInjector(new TestAccountModule());
@@ -28,30 +26,55 @@ class AccountServiceTest {
 
     @Test
     void getAll() {
-        assertIterableEquals(Arrays.asList(EXISTED_FIRST, EXISTED_SECOND), accountService.getAll());
+        assertIterableEquals(Arrays.asList(EXISTING_FIRST, EXISTING_SECOND), accountService.getAll());
     }
 
     @Test
-    void getOne() {
-        assertEquals(EXISTED_FIRST, accountService.getOne(1L));
+    void getOneOk() {
+        assertEquals(EXISTING_FIRST, accountService.getOne(EXISTING_FIRST.getId()));
     }
 
     @Test
-    void save() {
-        accountService.save(new Account(NEW_THIRD));
-        assertEquals(EXISTED_THIRD, accountService.getOne(3L));
+    void getOneNotExisted() {
+        assertNull(accountService.getOne(NOT_EXISTING.getId()));
     }
 
     @Test
-    void update() {
-        Account updated = new Account(EXISTED_FIRST.getId(), EXISTED_FIRST.getBalance() + 10000.0);
+    void saveOk() {
+        assertEquals(EXISTING_THIRD, accountService.save(new Account(NEW_THIRD)));
+    }
+
+    @Test
+    void saveExisting() {
+        assertNull(accountService.save(new Account(EXISTING_FIRST)));
+    }
+
+    @Test
+    void saveIncorrectBalance() {
+        assertNull(accountService.save(new Account(EXISTING_THIRD.getId(), EXISTING_THIRD.getBalance() - EXCEEDED_TRANSFER_AMOUNT)));
+    }
+
+    @Test
+    void updateOk() {
+        Account updated = new Account(EXISTING_FIRST.getId(), EXISTING_FIRST.getBalance() + NORMAL_TRANSFER_AMOUNT);
         assertEquals(updated, accountService.update(updated.getId(), updated));
     }
 
     @Test
-    void delete() {
-        assertTrue(accountService.delete(1L));
-        assertIterableEquals(Collections.singletonList(EXISTED_SECOND), accountService.getAll());
+    void updateNotExisted() {
+        Account updated = new Account(NOT_EXISTING.getId(), NOT_EXISTING.getBalance() + NORMAL_TRANSFER_AMOUNT);
+        assertNull(accountService.update(updated.getId(), updated));
+    }
+
+    @Test
+    void deleteOk() {
+        assertTrue(accountService.delete(EXISTING_FIRST.getId()));
+        assertIterableEquals(Collections.singletonList(EXISTING_SECOND), accountService.getAll());
+    }
+
+    @Test
+    void deleteNotExisted() {
+        assertFalse(accountService.delete(NOT_EXISTING.getId()));
     }
 
     @Test
