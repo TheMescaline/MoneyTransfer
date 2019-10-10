@@ -53,7 +53,15 @@ public class InMemoryAccountDAO implements AccountDAO {
 
     @Override
     public boolean doTransfer(long fromAccountId, long toAccountId, double amount) {
-        //TODO
+        Account from = storage.get(fromAccountId);
+        Account to = storage.get(toAccountId);
+        if (from != null && to != null && amount >=0 && from.getBalance() >= amount) {
+            from.setBalance(from.getBalance() - amount);
+            to.setBalance(to.getBalance() + amount);
+            storage.put(from.getId(), from);
+            storage.put(to.getId(), to);
+            return true;
+        }
         return false;
     }
 
