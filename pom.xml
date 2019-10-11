@@ -26,14 +26,11 @@
         <tomcat.version>8.5.40</tomcat.version>
         <maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
         <javax.el-api.version>3.0.0</javax.el-api.version>
-        <jackson-databind.version>2.10.0</jackson-databind.version>
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <snakeyaml.version>1.25</snakeyaml.version>
         <postgresql.version>42.2.8</postgresql.version>
         <mysql-connector-java.version>8.0.17</mysql-connector-java.version>
-        <oracle-jdbc.version>12.1.0.2</oracle-jdbc.version>
-        <mssql-jdbc.version>7.4.1.jre8</mssql-jdbc.version>
     </properties>
 
     <dependencies>
