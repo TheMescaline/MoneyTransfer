@@ -25,10 +25,6 @@ public class HibernateSessionFactory {
         return sessionFactory;
     }
 
-    public static void shutdown() {
-        getSessionFactory().close();
-    }
-
     public static void init(String configFilePath) {
         if (sessionFactory == null) {
             try (InputStream in = configFilePath == null ? HibernateSessionFactory.class.getClassLoader().getResourceAsStream("properties.yml") : new FileInputStream(configFilePath)) {

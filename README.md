@@ -18,11 +18,11 @@ Props file must contain this fields:
 
 **CURL commands for accounts management**
 
-* saveNew: `curl -X POST http://localhost:8080/api/v1/accounts -H 'Content-Type: application/json' -d '{"balance":30000.0}'`
-* getAll: `curl -X GET http://localhost:8080/api/v1/accounts`
-* getOne: `curl -X GET http://localhost:8080/api/v1/accounts/2`
-* update: `curl -X PUT http://localhost:8080/api/v1/accounts/2 -H 'Content-Type: application/json' -d '{"id":2,"balance":5550000.0}'`
-* delete: `curl -X DELETE http://localhost:8080/api/v1/accounts/1`
+*  saveNew: `curl -X POST http://localhost:8080/api/v1/accounts -H 'Content-Type: application/json' -d '{"balance":30000.0}'`
+*  getAll: `curl -X GET http://localhost:8080/api/v1/accounts`
+*  getOne: `curl -X GET http://localhost:8080/api/v1/accounts/2`
+*  update: `curl -X PUT http://localhost:8080/api/v1/accounts/2 -H 'Content-Type: application/json' -d '{"id":2,"balance":5550000.0}'`
+*  delete: `curl -X DELETE http://localhost:8080/api/v1/accounts/1`
 
 **CURL command for transfer operation**
 

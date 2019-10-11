@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @AllArgsConstructor
 @XmlRootElement
 public class TransferInfoPacket {
-    Long fromAccountId;
-    Long toAccountId;
-    Double amount;
+    private Long fromAccountId;
+    private Long toAccountId;
+    private Double amount;
 }

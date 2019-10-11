@@ -2,7 +2,6 @@ package com.themescaline.moneytransfer.exceptions;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlElement;
@@ -20,19 +19,15 @@ public class ErrorMessage {
 
     /**
      * contains the same HTTP Status code returned by the server
-     *
-     * @author lex.korovin@gmail.com
      */
     @XmlElement(name = "status")
-    int status;
+    private int status;
 
     /**
      * message describing the error
-     *
-     * @author lex.korovin@gmail.com
      */
     @XmlElement(name = "message")
-    String message;
+    private String message;
 
     public ErrorMessage(AppException ex) {
         this.status = ex.getStatus();

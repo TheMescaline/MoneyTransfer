@@ -23,7 +23,7 @@ public class Launcher {
         new Launcher().start();
     }
 
-    void start() throws Exception {
+    private void start() throws Exception {
         String port = System.getenv("PORT");
         if (port == null || port.isEmpty()) {
             port = "8080";

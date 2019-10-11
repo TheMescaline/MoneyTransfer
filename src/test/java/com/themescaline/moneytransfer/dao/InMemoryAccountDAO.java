@@ -4,7 +4,6 @@ import com.google.inject.Singleton;
 import com.themescaline.moneytransfer.exceptions.AppException;
 import com.themescaline.moneytransfer.model.Account;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.text.MessageFormat;
