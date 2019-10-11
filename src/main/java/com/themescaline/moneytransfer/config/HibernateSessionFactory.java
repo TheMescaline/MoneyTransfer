@@ -31,7 +31,7 @@ public class HibernateSessionFactory {
 
     public static void init(String configFilePath) {
         if (sessionFactory == null) {
-            try (InputStream in = new FileInputStream(configFilePath == null ? HibernateSessionFactory.class.getClassLoader().getResource("properties.yml").getFile() : configFilePath)) {
+            try (InputStream in = configFilePath == null ? HibernateSessionFactory.class.getClassLoader().getResourceAsStream("properties.yml") : new FileInputStream(configFilePath)) {
                 Yaml yaml = new Yaml();
                 YamlConnectionConfig config = yaml.loadAs(in, YamlConnectionConfig.class);
                 Configuration configuration = new Configuration();
