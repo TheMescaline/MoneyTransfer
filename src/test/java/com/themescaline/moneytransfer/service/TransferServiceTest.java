@@ -10,7 +10,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import javax.ws.rs.NotFoundException;
 
-import static com.themescaline.moneytransfer.TestAccountData.*;
+import static com.themescaline.moneytransfer.TestAccountDataHelper.EXCEEDED_TRANSFER_AMOUNT;
+import static com.themescaline.moneytransfer.TestAccountDataHelper.EXISTING_FIRST;
+import static com.themescaline.moneytransfer.TestAccountDataHelper.EXISTING_SECOND;
+import static com.themescaline.moneytransfer.TestAccountDataHelper.NEW_FIRST;
+import static com.themescaline.moneytransfer.TestAccountDataHelper.NEW_SECOND;
+import static com.themescaline.moneytransfer.TestAccountDataHelper.NORMAL_TRANSFER_AMOUNT;
+import static com.themescaline.moneytransfer.TestAccountDataHelper.NOT_EXISTING;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TransferServiceTest {

@@ -1,4 +1,4 @@
-# Money Transfer
+# Money Transfer [![Build Status](https://travis-ci.org/TheMescaline/vtb-medical-guide.svg?branch=master)](https://travis-ci.org/TheMescaline/vtb-medical-guide)
 
 Simple RESTful API application for money transfer operations and accounts management.
 

@@ -18,7 +18,7 @@ import java.util.Properties;
  *
  * @author lex.korovin@gmail.com
  */
-public class HibernateSessionFactory {
+public class HibernateSessionFactoryHelper {
     private static SessionFactory sessionFactory;
 
     public static SessionFactory getSessionFactory() {
@@ -27,7 +27,7 @@ public class HibernateSessionFactory {
 
     public static void init(String configFilePath) {
         if (sessionFactory == null) {
-            try (InputStream in = configFilePath == null ? HibernateSessionFactory.class.getClassLoader().getResourceAsStream("properties.yml") : new FileInputStream(configFilePath)) {
+            try (InputStream in = configFilePath == null ? HibernateSessionFactoryHelper.class.getClassLoader().getResourceAsStream("properties.yml") : new FileInputStream(configFilePath)) {
                 Yaml yaml = new Yaml();
                 YamlConnectionConfig config = yaml.loadAs(in, YamlConnectionConfig.class);
                 Configuration configuration = new Configuration();

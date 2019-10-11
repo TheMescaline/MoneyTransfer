@@ -1,6 +1,6 @@
 package com.themescaline.moneytransfer.util;
 
-import com.themescaline.moneytransfer.config.HibernateSessionFactory;
+import com.themescaline.moneytransfer.config.HibernateSessionFactoryHelper;
 import com.themescaline.moneytransfer.exceptions.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
@@ -19,7 +19,7 @@ public class TransactionHelper {
         T result = null;
         Transaction transaction = null;
         try {
-            Session session = HibernateSessionFactory.getSessionFactory().openSession();
+            Session session = HibernateSessionFactoryHelper.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             result = transactionalExecutor.execute(session);
             transaction.commit();
