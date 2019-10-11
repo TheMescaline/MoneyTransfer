@@ -9,6 +9,11 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
+/**
+ * Resource for transfer operations
+ *
+ * @author lex.korovin@gmail.com
+ */
 @Path("v1/transfer")
 public class MoneyTransferResource {
     private final TransferService transferService = BeanHelper.getBean(TransferService.class);

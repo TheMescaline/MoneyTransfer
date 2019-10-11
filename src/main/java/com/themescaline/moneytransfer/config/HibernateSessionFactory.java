@@ -13,6 +13,11 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * Hibernate session factory
+ *
+ * @author lex.korovin@gmail.com
+ */
 public class HibernateSessionFactory {
     private static SessionFactory sessionFactory;
 

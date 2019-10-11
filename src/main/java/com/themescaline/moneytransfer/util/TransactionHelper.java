@@ -8,6 +8,11 @@ import org.hibernate.Transaction;
 
 import javax.ws.rs.NotFoundException;
 
+/**
+ * Transactional strategy executor
+ *
+ * @author lex.korovin@gmail.com
+ */
 @Slf4j
 public class TransactionHelper {
     public static <T> T transactionalExecute(TransactionalExecutor<T> transactionalExecutor) {

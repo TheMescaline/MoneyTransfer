@@ -10,6 +10,11 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * Resource for account management
+ *
+ * @author lex.korovin@gmail.com
+ */
 @Path("v1/accounts")
 public class AccountsResource {
     private final AccountService accountService = BeanHelper.getBean(AccountService.class);

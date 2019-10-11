@@ -8,6 +8,11 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ * Main entity - bank account
+ *
+ * @author lex.korovin@gmail.com
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

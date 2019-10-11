@@ -6,6 +6,11 @@ import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
 import org.glassfish.jersey.servlet.ServletContainer;
 
+/**
+ * Application launcher class
+ *
+ * @author lex.korovin@gmail.com
+ */
 public class Launcher {
     private static final String JERSEY_SERVLET_NAME = "jersey-container-servlet";
 
@@ -19,7 +24,6 @@ public class Launcher {
     }
 
     void start() throws Exception {
-
         String port = System.getenv("PORT");
         if (port == null || port.isEmpty()) {
             port = "8080";

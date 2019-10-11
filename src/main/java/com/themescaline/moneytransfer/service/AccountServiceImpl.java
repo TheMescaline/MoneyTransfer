@@ -11,6 +11,11 @@ import javax.ws.rs.core.Response;
 import java.text.MessageFormat;
 import java.util.List;
 
+/**
+ * Implementation of a service for Accounts management
+ *
+ * @author lex.korovin@gmail.com
+ */
 @Slf4j
 @Singleton
 public class AccountServiceImpl implements AccountService {

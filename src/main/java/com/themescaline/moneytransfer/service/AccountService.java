@@ -5,6 +5,11 @@ import com.themescaline.moneytransfer.model.Account;
 
 import java.util.List;
 
+/**
+ * Service for Accounts management
+ *
+ * @author lex.korovin@gmail.com
+ */
 @ImplementedBy(AccountServiceImpl.class)
 public interface AccountService {
     List<Account> getAll();

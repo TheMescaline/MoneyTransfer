@@ -4,6 +4,11 @@ import com.themescaline.moneytransfer.model.Account;
 
 import java.util.List;
 
+/**
+ * DAO for all operations with storage
+ *
+ * @author lex.korovin@gmail.com
+ */
 public interface AccountDAO {
     List<Account> getAll();
 

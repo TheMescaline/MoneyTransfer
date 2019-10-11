@@ -12,6 +12,11 @@ import javax.ws.rs.core.Response;
 import java.text.MessageFormat;
 import java.util.List;
 
+/**
+ * Account DAO implementation
+ *
+ * @author lex.korovin@gmail.com
+ */
 @Slf4j
 @Singleton
 public class HibernateAccountDAO implements AccountDAO {

@@ -10,6 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import javax.ws.rs.core.Response;
 import java.text.MessageFormat;
 
+/**
+ * Implementation of a service for transferring operations
+ *
+ * @author lex.korovin@gmail.com
+ */
 @Slf4j
 @Singleton
 public class TransferServiceImpl implements TransferService {

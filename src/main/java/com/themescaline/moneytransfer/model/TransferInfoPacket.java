@@ -6,6 +6,11 @@ import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * Entity for transfer operations. Can be stored in DB as transfer operations audit if needed
+ *
+ * @author lex.korovin@gmail.com
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
