@@ -13,8 +13,7 @@ public class TransactionHelper {
     public static <T> T transactionalExecute(TransactionalExecutor<T> transactionalExecutor) {
         T result = null;
         Transaction transaction = null;
-//        try (Session session = HibernateSessionFactory.getSessionFactory().openSession()) {
-        try  {
+        try {
             Session session = HibernateSessionFactory.getSessionFactory().openSession();
             transaction = session.beginTransaction();
             result = transactionalExecutor.execute(session);
@@ -36,6 +35,4 @@ public class TransactionHelper {
             transaction.rollback();
         }
     }
-
-    ;
 }

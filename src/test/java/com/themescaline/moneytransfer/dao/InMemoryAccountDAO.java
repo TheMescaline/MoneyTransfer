@@ -40,7 +40,8 @@ public class InMemoryAccountDAO implements AccountDAO {
             throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), "balance must not be negative");
         }
         account.setId(counter.incrementAndGet());
-        return storage.putIfAbsent(account.getId(), account);
+        storage.put(account.getId(), account);
+        return account;
     }
 
     @Override

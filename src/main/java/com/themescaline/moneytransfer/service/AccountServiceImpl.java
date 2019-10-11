@@ -39,8 +39,7 @@ public class AccountServiceImpl implements AccountService {
             throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), "Save account must be new (must not have id)");
         }
         log.info(MessageFormat.format("Processing request of saving account: {0}", account));
-        accountDAO.save(account);
-        return account;
+        return accountDAO.save(account);
     }
 
     @Override

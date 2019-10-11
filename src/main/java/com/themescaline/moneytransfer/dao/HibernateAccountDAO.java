@@ -37,33 +37,27 @@ public class HibernateAccountDAO implements AccountDAO {
 
     @Override
     public Account update(Account account) {
-        final Account updated = TransactionHelper.transactionalExecute(session -> {
+        return TransactionHelper.transactionalExecute(session -> {
             Account temp = session.find(Account.class, account.getId(), LockModeType.PESSIMISTIC_WRITE);
             if (temp != null) {
                 temp.setBalance(account.getBalance());
                 session.update(temp);
+                return temp;
             }
-            return temp;
-        });
-        if (updated == null) {
             throw new NotFoundException(MessageFormat.format("Can't update account with id {0} because it doesn't exists", account.getId()));
-        }
-        return updated;
+        });
     }
 
     @Override
     public void delete(long accountId) {
-        final Boolean deletingResult = TransactionHelper.transactionalExecute(session -> {
+        TransactionHelper.transactionalExecute(session -> {
             Account toDelete = session.find(Account.class, accountId, LockModeType.PESSIMISTIC_WRITE);
             if (toDelete != null) {
                 session.delete(toDelete);
-                return true;
+                return null;
             }
-            return false;
-        });
-        if (!deletingResult) {
             throw new NotFoundException(MessageFormat.format("Can't delete account with id {0} because it doesn't exists", accountId));
-        }
+        });
     }
 
     @Override
