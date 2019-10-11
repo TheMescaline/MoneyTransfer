@@ -2,8 +2,19 @@
 
 Simple RESTful API application for money transfer operations and accounts management.
 
+You can start application with default DB implementation (H2), or you can pass a parameter (path to a props.yml file) with connection configuration for your DB (it supports PostgreSQL, MySQL).
+
+Props file must contain this fields:
+
+* url: 
+* driver: 
+* user: 
+* password: 
+* poolSize: 
+
+**Assemble and start**
 * Jar assemble - mvn clean package
-* Start application - java -jar moneytransfer.jar
+* Start application - java -jar moneytransfer.jar _path_to_props.yml_
 
 **CURL commands for accounts management**
 
