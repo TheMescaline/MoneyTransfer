@@ -20,7 +20,7 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     public boolean doTransfer(TransferInfoPacket packet) {
-        log.info(MessageFormat.format("Transferring {0} from account ID {1} to account ID {2}", packet.getFromAccountId(), packet.getToAccountId(), packet.getAmount()));
+        log.info(MessageFormat.format("Processing request of transferring {0} from account ID {1} to account ID {2}", packet.getFromAccountId(), packet.getToAccountId(), packet.getAmount()));
         return accountDAO.doTransfer(packet.getFromAccountId(), packet.getToAccountId(), packet.getAmount());
     }
 }

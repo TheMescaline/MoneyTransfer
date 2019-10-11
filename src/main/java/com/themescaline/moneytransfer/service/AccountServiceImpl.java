@@ -24,31 +24,31 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getOne(long accountId) {
-        log.info(MessageFormat.format("Retrieving account with id = {0}", accountId));
+        log.info(MessageFormat.format("Processing request of retrieving account with id = {0}", accountId));
         return accountDAO.getOne(accountId);
     }
 
     @Override
     public Account save(Account account) {
-        log.info(MessageFormat.format("Saving account: {0}", account));
+        log.info(MessageFormat.format("Processing request of saving account: {0}", account));
         return accountDAO.save(account);
     }
 
     @Override
     public Account update(long accountId, Account account) {
-        log.info(MessageFormat.format("Updating account: {0} by id = {1}", account, accountId));
+        log.info(MessageFormat.format("Processing request of updating account id: {0} with data from {1}", accountId, account));
         return accountDAO.update(accountId, account);
     }
 
     @Override
     public boolean delete(long accountId) {
-        log.info(MessageFormat.format("Deleting account with id = {0}", accountId));
+        log.info(MessageFormat.format("Processing request of deleting account with id = {0}", accountId));
         return accountDAO.delete(accountId);
     }
 
     @Override
     public void clear() {
-        log.info("Clearing storage");
+        log.info("Processing request of clearing storage");
         accountDAO.clear();
     }
 }
