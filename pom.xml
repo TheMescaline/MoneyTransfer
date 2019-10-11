@@ -29,6 +29,11 @@
         <jackson-databind.version>2.10.0</jackson-databind.version>
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <snakeyaml.version>1.25</snakeyaml.version>
+        <postgresql.version>42.2.8</postgresql.version>
+        <mysql-connector-java.version>8.0.17</mysql-connector-java.version>
+        <oracle-jdbc.version>12.1.0.2</oracle-jdbc.version>
+        <mssql-jdbc.version>7.4.1.jre8</mssql-jdbc.version>
     </properties>
 
     <dependencies>
@@ -38,6 +43,24 @@
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql-connector-java.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>${mssql-jdbc.version}</version>
         </dependency>
 
         <dependency>
@@ -121,6 +144,12 @@
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
             <version>${guice.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
         </dependency>
 
         <!--Tomcat embedded-->

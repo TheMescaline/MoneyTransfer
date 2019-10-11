@@ -1,30 +1,42 @@
 package com.themescaline.moneytransfer.config;
 
 import com.themescaline.moneytransfer.model.Account;
+import com.themescaline.moneytransfer.util.YamlConnectionConfig;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class HibernateSessionFactory {
     private static SessionFactory sessionFactory;
 
     public static SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
+
+    public static void shutdown() {
+        getSessionFactory().close();
+    }
+
+    public static void init(String configFilePath) {
         if (sessionFactory == null) {
-            try {
+            try (InputStream in = new FileInputStream(configFilePath == null ? HibernateSessionFactory.class.getClassLoader().getResource("properties.yml").getFile() : configFilePath)) {
+                Yaml yaml = new Yaml();
+                YamlConnectionConfig config = yaml.loadAs(in, YamlConnectionConfig.class);
                 Configuration configuration = new Configuration();
 
                 Properties settings = new Properties();
-                settings.put(Environment.DRIVER, "org.h2.Driver");
-                //LOCK_MODE for the sake of concurrent access on transfer operations and account updating
-                settings.put(Environment.URL, "jdbc:h2:mem:testdb;LOCK_MODE=1");
-                settings.put(Environment.USER, "sa");
-                settings.put(Environment.PASS, "password");
-                settings.put(Environment.POOL_SIZE, 10);
-                settings.put(Environment.DIALECT, "org.hibernate.dialect.H2Dialect");
+                settings.put(Environment.DRIVER, config.getDriver());
+                settings.put(Environment.URL, config.getUrl());
+                settings.put(Environment.USER, config.getUser());
+                settings.put(Environment.PASS, config.getPassword());
+                settings.put(Environment.POOL_SIZE, config.getPoolSize());
                 settings.put(Environment.SHOW_SQL, "false");
                 settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
                 settings.put(Environment.HBM2DDL_AUTO, "update");
@@ -41,10 +53,5 @@ public class HibernateSessionFactory {
                 e.printStackTrace();
             }
         }
-        return sessionFactory;
-    }
-
-    public static void shutdown() {
-        getSessionFactory().close();
     }
 }

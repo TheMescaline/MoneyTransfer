@@ -1,5 +1,6 @@
 package com.themescaline.moneytransfer;
 
+import com.themescaline.moneytransfer.config.HibernateSessionFactory;
 import com.themescaline.moneytransfer.config.JerseyConfiguration;
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
@@ -9,6 +10,11 @@ public class Launcher {
     private static final String JERSEY_SERVLET_NAME = "jersey-container-servlet";
 
     public static void main(String[] args) throws Exception {
+        String configFilePath = null;
+        if (args.length > 0) {
+            configFilePath = args[0];
+        }
+        HibernateSessionFactory.init(configFilePath);
         new Launcher().start();
     }
 

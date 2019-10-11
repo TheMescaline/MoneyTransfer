@@ -1,0 +1,6 @@
+#LOCK_MODE for the sake of concurrent access on transfer operations and account updating
+url: jdbc:h2:mem:testdb;LOCK_MODE=1
+driver: org.h2.Driver
+user: sa
+password: password
+poolSize: 10
