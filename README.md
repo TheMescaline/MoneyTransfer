@@ -11,22 +11,16 @@ Props file must contain this fields:
 * user: 
 * password: 
 * poolSize: 
-
-**Assemble and start**
+###### **Assemble and start**
 * Jar assemble - mvn clean package
 * Start application - java -jar moneytransfer.jar _path_to_props.yml_
-
-**CURL commands for accounts management**
-
+###### **CURL commands for accounts management**
 *  saveNew: `curl -X POST http://localhost:8080/api/v1/accounts -H 'Content-Type: application/json' -d '{"balance":30000.0}'`
 *  getAll: `curl -X GET http://localhost:8080/api/v1/accounts`
 *  getOne: `curl -X GET http://localhost:8080/api/v1/accounts/2`
 *  update: `curl -X PUT http://localhost:8080/api/v1/accounts/2 -H 'Content-Type: application/json' -d '{"id":2,"balance":5550000.0}'`
 *  delete: `curl -X DELETE http://localhost:8080/api/v1/accounts/1`
-
-**CURL command for transfer operation**
-
+###### **CURL command for transfer operation**
 Transfer operation consumes entity TransferDataPacket with id of supplier-account, id or receiver-account and transferring amount
-
 * `curl -X PUT http://localhost:8080/api/v1/transfer -H 'Content-Type: application/json' -d '{"fromAccountId":2,"toAccountId":1,"amount":10000.0}'`
 
