@@ -16,7 +16,7 @@ public class AccountsResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @JacksonFeatures(serializationEnable =  { SerializationFeature.INDENT_OUTPUT })
+    @JacksonFeatures(serializationEnable = {SerializationFeature.INDENT_OUTPUT})
     public Response getAll() {
         return Response.ok(accountService.getAll()).build();
     }
@@ -24,42 +24,32 @@ public class AccountsResource {
     @Path("{accountId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @JacksonFeatures(serializationEnable =  { SerializationFeature.INDENT_OUTPUT })
+    @JacksonFeatures(serializationEnable = {SerializationFeature.INDENT_OUTPUT})
     public Response getOne(@PathParam("accountId") Long accountId) {
-        Account result = accountService.getOne(accountId);
-        return result != null ?
-                Response.ok(result).build() :
-                Response.status(Response.Status.NOT_FOUND).build();
+        return Response.ok(accountService.getOne(accountId)).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JacksonFeatures(serializationEnable =  { SerializationFeature.INDENT_OUTPUT })
+    @JacksonFeatures(serializationEnable = {SerializationFeature.INDENT_OUTPUT})
     public Response save(Account account) {
-        Account saved = accountService.save(account);
-        return saved != null ?
-                Response.status(Response.Status.CREATED).entity(saved).build() :
-                Response.status(Response.Status.BAD_REQUEST).build();
+        return Response.status(Response.Status.CREATED).entity(accountService.save(account)).build();
     }
 
     @Path("{accountId}")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @JacksonFeatures(serializationEnable =  { SerializationFeature.INDENT_OUTPUT })
+    @JacksonFeatures(serializationEnable = {SerializationFeature.INDENT_OUTPUT})
     public Response update(@PathParam("accountId") long accountId, Account account) {
-        Account updated = accountService.update(accountId, account);
-        return updated != null ?
-                Response.ok(updated).build() :
-                Response.status(Response.Status.BAD_REQUEST).build();
+        return Response.ok(accountService.update(accountId, account)).build();
     }
 
     @Path("{accountId}")
     @DELETE
     public Response delete(@PathParam("accountId") long accountId) {
-        return accountService.delete(accountId) ?
-                Response.noContent().build() :
-                Response.status(Response.Status.NOT_FOUND).build();
+        accountService.delete(accountId);
+        return Response.noContent().build();
     }
 }

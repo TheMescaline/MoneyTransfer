@@ -1,9 +1,13 @@
 package com.themescaline.moneytransfer.dao;
 
 import com.google.inject.Singleton;
+import com.themescaline.moneytransfer.exceptions.AppException;
 import com.themescaline.moneytransfer.model.Account;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.core.Response;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -23,47 +27,57 @@ public class InMemoryAccountDAO implements AccountDAO {
 
     @Override
     public Account getOne(long accountId) {
-        return storage.get(accountId);
+        final Account account = storage.get(accountId);
+        if (account == null) {
+            throw new NotFoundException("not founded");
+        }
+        return account;
     }
 
     @Override
     public Account save(Account account) {
-        if (account.isNew()) {
-            account.setId(counter.incrementAndGet());
+        if (account.getBalance() < 0) {
+            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), "balance must not be negative");
         }
+        account.setId(counter.incrementAndGet());
+        return storage.putIfAbsent(account.getId(), account);
+    }
 
-        if (account.getBalance() < 0 || null != storage.putIfAbsent(account.getId(), account)) {
-            return null;
+    @Override
+    public Account update(Account account) {
+        if (account.getBalance() < 0) {
+            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), "balance must not be negative");
+        }
+        if (null == storage.replace(account.getId(), account)) {
+            throw new NotFoundException("not founded for update");
         }
         return account;
     }
 
     @Override
-    public Account update(long accountId, Account account) {
-        account.setId(accountId);
-        if (null == storage.replace(accountId, account)) {
-            return null;
+    public void delete(long accountId) {
+        if (storage.remove(accountId) == null) {
+            throw new NotFoundException("not founded for delete");
         }
-        return account;
     }
 
     @Override
-    public boolean delete(long accountId) {
-        return null != storage.remove(accountId);
-    }
-
-    @Override
-    public boolean doTransfer(long fromAccountId, long toAccountId, double amount) {
+    public void doTransfer(long fromAccountId, long toAccountId, double amount) {
         Account from = storage.get(fromAccountId);
         Account to = storage.get(toAccountId);
-        if (from != null && to != null && amount >=0 && from.getBalance() >= amount) {
-            from.setBalance(from.getBalance() - amount);
-            to.setBalance(to.getBalance() + amount);
-            storage.put(from.getId(), from);
-            storage.put(to.getId(), to);
-            return true;
+        if (from == null) {
+            throw new NotFoundException(MessageFormat.format("Can't find account with id {0}", fromAccountId));
         }
-        return false;
+        if (to == null) {
+            throw new NotFoundException(MessageFormat.format("Can't find account with id {0}", toAccountId));
+        }
+        if (from.getBalance() < amount) {
+            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), MessageFormat.format("Not enough money on account with id {1} to make transfer", fromAccountId));
+        }
+        from.setBalance(from.getBalance() - amount);
+        to.setBalance(to.getBalance() + amount);
+        storage.put(from.getId(), from);
+        storage.put(to.getId(), to);
     }
 
     @Override

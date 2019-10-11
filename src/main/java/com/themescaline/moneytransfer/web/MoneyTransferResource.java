@@ -16,8 +16,7 @@ public class MoneyTransferResource {
     @PUT
     @Consumes("application/json")
     public Response doTransfer(TransferInfoPacket packet) {
-        return transferService.doTransfer(packet) ?
-                Response.ok().build() :
-                Response.status(Response.Status.BAD_REQUEST).build();
+        transferService.doTransfer(packet);
+        return Response.ok().build();
     }
 }

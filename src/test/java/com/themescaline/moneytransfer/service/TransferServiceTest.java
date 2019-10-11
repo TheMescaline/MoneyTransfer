@@ -3,13 +3,16 @@ package com.themescaline.moneytransfer.service;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.themescaline.moneytransfer.config.TestAccountModule;
+import com.themescaline.moneytransfer.exceptions.AppException;
 import com.themescaline.moneytransfer.model.Account;
 import com.themescaline.moneytransfer.model.TransferInfoPacket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.ws.rs.NotFoundException;
+
 import static com.themescaline.moneytransfer.TestAccountData.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TransferServiceTest {
     private Injector injector = Guice.createInjector(new TestAccountModule());
@@ -25,15 +28,16 @@ class TransferServiceTest {
 
     @Test
     void doTransferSuccess() {
-        assertTrue(transferService.doTransfer(new TransferInfoPacket(EXISTING_FIRST.getId(), EXISTING_SECOND.getId(), NORMAL_TRANSFER_AMOUNT)));
-        assertEquals(accountService.getOne(EXISTING_FIRST.getId()).getBalance(), EXISTING_FIRST.getBalance() - NORMAL_TRANSFER_AMOUNT);
-        assertEquals(accountService.getOne(EXISTING_SECOND.getId()).getBalance(), EXISTING_SECOND.getBalance() + NORMAL_TRANSFER_AMOUNT);
+        transferService.doTransfer(new TransferInfoPacket(EXISTING_FIRST.getId(), EXISTING_SECOND.getId(), NORMAL_TRANSFER_AMOUNT));
     }
 
     @Test
     void doTransferFailure() {
-        assertFalse(transferService.doTransfer(new TransferInfoPacket(EXISTING_FIRST.getId(), EXISTING_SECOND.getId(), EXCEEDED_TRANSFER_AMOUNT)));
-        assertEquals(accountService.getOne(EXISTING_FIRST.getId()).getBalance(), EXISTING_FIRST.getBalance());
-        assertEquals(accountService.getOne(EXISTING_SECOND.getId()).getBalance(), EXISTING_SECOND.getBalance());
+        assertThrows(AppException.class, () -> transferService.doTransfer(new TransferInfoPacket(EXISTING_FIRST.getId(), EXISTING_SECOND.getId(), EXCEEDED_TRANSFER_AMOUNT)));
+    }
+
+    @Test
+    void doTransferNotExist() {
+        assertThrows(NotFoundException.class, () -> transferService.doTransfer(new TransferInfoPacket(NOT_EXISTING.getId(), EXISTING_SECOND.getId(), EXCEEDED_TRANSFER_AMOUNT)));
     }
 }

@@ -19,6 +19,7 @@ public class HibernateSessionFactory {
 
                 Properties settings = new Properties();
                 settings.put(Environment.DRIVER, "org.h2.Driver");
+                //LOCK_MODE for the sake of concurrent access on transfer operations and account updating
                 settings.put(Environment.URL, "jdbc:h2:mem:testdb;LOCK_MODE=1");
                 settings.put(Environment.USER, "sa");
                 settings.put(Environment.PASS, "password");

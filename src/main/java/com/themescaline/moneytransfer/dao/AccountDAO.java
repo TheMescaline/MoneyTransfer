@@ -11,11 +11,11 @@ public interface AccountDAO {
 
     Account save(Account account);
 
-    Account update(long accountId, Account account);
+    Account update(Account account);
 
-    boolean delete(long accountId);
+    void delete(long accountId);
 
-    boolean doTransfer(long fromAccountId, long toAccountId, double amount);
+    void doTransfer(long fromAccountId, long toAccountId, double amount);
 
     void clear();
 }
