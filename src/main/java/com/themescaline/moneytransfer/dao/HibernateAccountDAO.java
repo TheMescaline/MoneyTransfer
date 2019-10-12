@@ -49,7 +49,7 @@ public class HibernateAccountDAO implements AccountDAO {
                 session.update(temp);
                 return temp;
             }
-            throw new NotFoundException(MessageFormat.format("Can't update account with id {0} because it doesn't exists", account.getId()));
+            throw new NotFoundException(MessageFormat.format("Can''t update account with id {0} because it doesn''t exists", account.getId()));
         });
     }
 
@@ -61,30 +61,41 @@ public class HibernateAccountDAO implements AccountDAO {
                 session.delete(toDelete);
                 return null;
             }
-            throw new NotFoundException(MessageFormat.format("Can't delete account with id {0} because it doesn't exists", accountId));
+            throw new NotFoundException(MessageFormat.format("Can''t delete account with id {0} because it doesn''t exists", accountId));
         });
     }
 
     @Override
-    public void doTransfer(long fromAccountId, long toAccountId, double amount) {
+    public void transfer(long fromAccountId, long toAccountId, double amount) {
         TransactionHelper.transactionalExecute(session -> {
             Account fromAccount = session.find(Account.class, fromAccountId, LockModeType.PESSIMISTIC_WRITE);
             Account toAccount = session.find(Account.class, toAccountId, LockModeType.PESSIMISTIC_WRITE);
             if (fromAccount == null) {
-                throw new NotFoundException(MessageFormat.format("Can't find account with id {0}", fromAccountId));
+                throw new NotFoundException(MessageFormat.format("Can''t find account with id {0}", fromAccountId));
             }
             if (toAccount == null) {
-                throw new NotFoundException(MessageFormat.format("Can't find account with id {0}", toAccountId));
+                throw new NotFoundException(MessageFormat.format("Can''t find account with id {0}", toAccountId));
             }
             if (fromAccount.getBalance() < amount) {
-                throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), MessageFormat.format("Can't get {0} money from account with id {1}", amount, fromAccountId));
+                throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), MessageFormat.format("Can''t get {0} money from account with id {1}", amount, fromAccountId));
             }
             fromAccount.setBalance(fromAccount.getBalance() - amount);
             session.merge(fromAccount);
             toAccount.setBalance(toAccount.getBalance() + amount);
             session.merge(toAccount);
+            log.debug("Transaction is done");
             return null;
         });
+    }
+
+    @Override
+    public void withdraw(long accountId, double amount) {
+
+    }
+
+    @Override
+    public void deposit(long accountId, double amount) {
+
     }
 
     @Override

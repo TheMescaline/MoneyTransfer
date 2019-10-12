@@ -29,67 +29,67 @@ class AccountServiceTest {
     private AccountService accountService = injector.getInstance(AccountService.class);
 
     @BeforeEach
-    private void setUp() {
+    void setUp() {
         accountService.clear();
         accountService.save(new Account(NEW_FIRST));
         accountService.save(new Account(NEW_SECOND));
     }
 
     @Test
-    private void getAll() {
+    void getAll() {
         assertIterableEquals(Arrays.asList(EXISTING_FIRST, EXISTING_SECOND), accountService.getAll());
     }
 
     @Test
-    private void getOneOk() {
+    void getOneOk() {
         assertEquals(EXISTING_FIRST, accountService.getOne(EXISTING_FIRST.getId()));
     }
 
     @Test
-    private void getOneNotExisted() {
+    void getOneNotExisted() {
         assertThrows(NotFoundException.class, () -> accountService.getOne(NOT_EXISTING.getId()));
     }
 
     @Test
-    private void saveOk() {
+    void saveOk() {
         assertEquals(EXISTING_THIRD, accountService.save(new Account(NEW_THIRD)));
     }
 
     @Test
-    private void saveExisting() {
+    void saveExisting() {
         assertThrows(AppException.class, () -> accountService.save(new Account(EXISTING_FIRST)));
     }
 
     @Test
-    private void saveIncorrectBalance() {
+    void saveIncorrectBalance() {
         assertThrows(AppException.class, () -> accountService.save(new Account(EXISTING_THIRD.getId(), EXISTING_THIRD.getBalance() - EXCEEDED_TRANSFER_AMOUNT)));
     }
 
     @Test
-    private void updateOk() {
+    void updateOk() {
         Account updated = new Account(EXISTING_FIRST.getId(), EXISTING_FIRST.getBalance() + NORMAL_TRANSFER_AMOUNT);
         assertEquals(updated, accountService.update(updated.getId(), updated));
     }
 
     @Test
-    private void updateNotExisted() {
+    void updateNotExisted() {
         Account updated = new Account(NOT_EXISTING.getId(), NOT_EXISTING.getBalance() + NORMAL_TRANSFER_AMOUNT);
         assertThrows(NotFoundException.class, () -> accountService.update(updated.getId(), updated));
     }
 
     @Test
-    private void deleteOk() {
+    void deleteOk() {
         accountService.delete(EXISTING_FIRST.getId());
         assertIterableEquals(Collections.singletonList(EXISTING_SECOND), accountService.getAll());
     }
 
     @Test
-    private void deleteNotExisted() {
+    void deleteNotExisted() {
         assertThrows(NotFoundException.class, () -> accountService.delete(NOT_EXISTING.getId()));
     }
 
     @Test
-    private void clear() {
+    void clear() {
         accountService.clear();
         assertIterableEquals(Collections.EMPTY_LIST, accountService.getAll());
     }

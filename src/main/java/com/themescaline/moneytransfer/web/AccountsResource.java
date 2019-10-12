@@ -5,7 +5,6 @@ import com.themescaline.moneytransfer.config.BeanHelper;
 import com.themescaline.moneytransfer.model.Account;
 import com.themescaline.moneytransfer.service.AccountService;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.annotation.JacksonFeatures;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -22,7 +21,7 @@ import javax.ws.rs.core.Response;
  *
  * @author lex.korovin@gmail.com
  */
-@Path("v1/accounts")
+@Path("v1/closed/accounts")
 public class AccountsResource {
     private final AccountService accountService = BeanHelper.getBean(AccountService.class);
 

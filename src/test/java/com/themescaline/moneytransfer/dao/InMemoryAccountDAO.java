@@ -62,14 +62,14 @@ public class InMemoryAccountDAO implements AccountDAO {
     }
 
     @Override
-    public void doTransfer(long fromAccountId, long toAccountId, double amount) {
+    public void transfer(long fromAccountId, long toAccountId, double amount) {
         Account from = storage.get(fromAccountId);
         Account to = storage.get(toAccountId);
         if (from == null) {
-            throw new NotFoundException(MessageFormat.format("Can't find account with id {0}", fromAccountId));
+            throw new NotFoundException(MessageFormat.format("Can''t find account with id {0}", fromAccountId));
         }
         if (to == null) {
-            throw new NotFoundException(MessageFormat.format("Can't find account with id {0}", toAccountId));
+            throw new NotFoundException(MessageFormat.format("Can''t find account with id {0}", toAccountId));
         }
         if (from.getBalance() < amount) {
             throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), MessageFormat.format("Not enough money on account with id {1} to make transfer", fromAccountId));
@@ -77,6 +77,29 @@ public class InMemoryAccountDAO implements AccountDAO {
         from.setBalance(from.getBalance() - amount);
         to.setBalance(to.getBalance() + amount);
         storage.put(from.getId(), from);
+        storage.put(to.getId(), to);
+    }
+
+    @Override
+    public void withdraw(long accountId, double amount) {
+        Account from = storage.get(accountId);
+        if (from == null) {
+            throw new NotFoundException(MessageFormat.format("Can''t find account with id {0}", accountId));
+        }
+        if (from.getBalance() < amount) {
+            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), MessageFormat.format("Not enough money on account with id {1} to make transfer", accountId));
+        }
+        from.setBalance(from.getBalance() - amount);
+        storage.put(from.getId(), from);
+    }
+
+    @Override
+    public void deposit(long accountId, double amount) {
+        Account to = storage.get(accountId);
+        if (to == null) {
+            throw new NotFoundException(MessageFormat.format("Can''t find account with id {0}", accountId));
+        }
+        to.setBalance(to.getBalance() + amount);
         storage.put(to.getId(), to);
     }
 

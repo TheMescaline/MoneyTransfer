@@ -5,6 +5,7 @@ import com.themescaline.moneytransfer.model.Account;
 public class TestAccountDataHelper {
     public final static double NORMAL_TRANSFER_AMOUNT = 5000.0;
     public final static double EXCEEDED_TRANSFER_AMOUNT = 1_000_000_000.0;
+    public final static double NEGATIVE_AMOUNT = -1_000.0;
     public final static Account NEW_FIRST = new Account(10000.0);
     public final static Account NEW_SECOND = new Account(20000.0);
     public final static Account NEW_THIRD = new Account(30000.0);

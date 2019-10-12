@@ -5,7 +5,9 @@ import com.google.inject.Injector;
 import com.themescaline.moneytransfer.config.TestAccountModule;
 import com.themescaline.moneytransfer.exceptions.AppException;
 import com.themescaline.moneytransfer.model.Account;
+import com.themescaline.moneytransfer.model.DepositInfoPacket;
 import com.themescaline.moneytransfer.model.TransferInfoPacket;
+import com.themescaline.moneytransfer.model.WithdrawInfoPacket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import javax.ws.rs.NotFoundException;
@@ -13,10 +15,12 @@ import javax.ws.rs.NotFoundException;
 import static com.themescaline.moneytransfer.TestAccountDataHelper.EXCEEDED_TRANSFER_AMOUNT;
 import static com.themescaline.moneytransfer.TestAccountDataHelper.EXISTING_FIRST;
 import static com.themescaline.moneytransfer.TestAccountDataHelper.EXISTING_SECOND;
+import static com.themescaline.moneytransfer.TestAccountDataHelper.NEGATIVE_AMOUNT;
 import static com.themescaline.moneytransfer.TestAccountDataHelper.NEW_FIRST;
 import static com.themescaline.moneytransfer.TestAccountDataHelper.NEW_SECOND;
 import static com.themescaline.moneytransfer.TestAccountDataHelper.NORMAL_TRANSFER_AMOUNT;
 import static com.themescaline.moneytransfer.TestAccountDataHelper.NOT_EXISTING;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TransferServiceTest {
@@ -25,24 +29,58 @@ class TransferServiceTest {
     private AccountService accountService = injector.getInstance(AccountService.class);
 
     @BeforeEach
-    private void setUp() {
+    void setUp() {
         accountService.clear();
         accountService.save(new Account(NEW_FIRST));
         accountService.save(new Account(NEW_SECOND));
     }
 
     @Test
-    private void doTransferSuccess() {
-        transferService.doTransfer(new TransferInfoPacket(EXISTING_FIRST.getId(), EXISTING_SECOND.getId(), NORMAL_TRANSFER_AMOUNT));
+    void doTransferSuccess() {
+        transferService.transfer(new TransferInfoPacket(EXISTING_FIRST.getId(), EXISTING_SECOND.getId(), NORMAL_TRANSFER_AMOUNT));
+        assertEquals(EXISTING_FIRST.getBalance() - NORMAL_TRANSFER_AMOUNT, accountService.getOne(EXISTING_FIRST.getId()).getBalance());
+        assertEquals(EXISTING_SECOND.getBalance() + NORMAL_TRANSFER_AMOUNT, accountService.getOne(EXISTING_SECOND.getId()).getBalance());
     }
 
     @Test
-    private void doTransferFailure() {
-        assertThrows(AppException.class, () -> transferService.doTransfer(new TransferInfoPacket(EXISTING_FIRST.getId(), EXISTING_SECOND.getId(), EXCEEDED_TRANSFER_AMOUNT)));
+    void doTransferFailure() {
+        assertThrows(AppException.class, () -> transferService.transfer(new TransferInfoPacket(EXISTING_FIRST.getId(), EXISTING_SECOND.getId(), EXCEEDED_TRANSFER_AMOUNT)));
     }
 
     @Test
-    private void doTransferNotExist() {
-        assertThrows(NotFoundException.class, () -> transferService.doTransfer(new TransferInfoPacket(NOT_EXISTING.getId(), EXISTING_SECOND.getId(), EXCEEDED_TRANSFER_AMOUNT)));
+    void doTransferNotExist() {
+        assertThrows(NotFoundException.class, () -> transferService.transfer(new TransferInfoPacket(NOT_EXISTING.getId(), EXISTING_SECOND.getId(), EXCEEDED_TRANSFER_AMOUNT)));
+    }
+
+    @Test
+    void doWithdrawSuccess() {
+        transferService.withdraw(new WithdrawInfoPacket(EXISTING_FIRST.getId(), NORMAL_TRANSFER_AMOUNT));
+        assertEquals(EXISTING_FIRST.getBalance() - NORMAL_TRANSFER_AMOUNT, accountService.getOne(EXISTING_FIRST.getId()).getBalance());
+    }
+
+    @Test
+    void doWithdrawFailure() {
+        assertThrows(AppException.class, () -> transferService.withdraw(new WithdrawInfoPacket(EXISTING_FIRST.getId(), EXCEEDED_TRANSFER_AMOUNT)));
+    }
+
+    @Test
+    void doWithdrawNotExist() {
+        assertThrows(NotFoundException.class, () -> transferService.withdraw(new WithdrawInfoPacket(NOT_EXISTING.getId(), EXCEEDED_TRANSFER_AMOUNT)));
+    }
+
+    @Test
+    void doDepositSuccess() {
+        transferService.deposit(new DepositInfoPacket(EXISTING_FIRST.getId(), NORMAL_TRANSFER_AMOUNT));
+        assertEquals(EXISTING_FIRST.getBalance() + NORMAL_TRANSFER_AMOUNT, accountService.getOne(EXISTING_FIRST.getId()).getBalance());
+    }
+
+    @Test
+    void doDepositFailure() {
+        assertThrows(AppException.class, () -> transferService.deposit(new DepositInfoPacket(EXISTING_FIRST.getId(), NEGATIVE_AMOUNT)));
+    }
+
+    @Test
+    void doDepositNotExist() {
+        assertThrows(NotFoundException.class, () -> transferService.deposit(new DepositInfoPacket(NOT_EXISTING.getId(), EXCEEDED_TRANSFER_AMOUNT)));
     }
 }
