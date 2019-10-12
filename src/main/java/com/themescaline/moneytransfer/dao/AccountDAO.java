@@ -9,6 +9,9 @@ import java.util.List;
  * @author lex.korovin@gmail.com
  */
 public interface AccountDAO {
+    String ALL_SORTED = "from Account";
+    String CLEAR = "DELETE FROM Account";
+
     List<Account> getAll();
 
     Account getOne(long accountId);

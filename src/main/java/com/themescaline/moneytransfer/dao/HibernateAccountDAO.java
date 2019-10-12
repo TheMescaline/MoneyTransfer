@@ -20,9 +20,10 @@ import java.util.List;
 @Slf4j
 @Singleton
 public class HibernateAccountDAO implements AccountDAO {
+    @SuppressWarnings("unchecked")
     @Override
     public List<Account> getAll() {
-        return TransactionHelper.transactionalExecute(session -> session.createNamedQuery(Account.ALL_SORTED, Account.class).getResultList());
+        return TransactionHelper.transactionalExecute(session -> session.createQuery(ALL_SORTED).list());
     }
 
     @Override
@@ -100,6 +101,6 @@ public class HibernateAccountDAO implements AccountDAO {
 
     @Override
     public void clear() {
-        TransactionHelper.transactionalExecute(session -> session.createNamedQuery(Account.CLEAR).executeUpdate());
+        TransactionHelper.transactionalExecute(session -> session.createQuery(CLEAR).executeUpdate());
     }
 }

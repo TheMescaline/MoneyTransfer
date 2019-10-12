@@ -3,14 +3,11 @@ package com.themescaline.moneytransfer.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -23,17 +20,10 @@ import javax.xml.bind.annotation.XmlTransient;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@NamedQueries({
-        @NamedQuery(name = Account.ALL_SORTED, query = "SELECT a FROM Account a ORDER BY a.id"),
-        @NamedQuery(name = Account.CLEAR, query = "DELETE FROM Account a")
-})
 @Entity
 @XmlRootElement
 @Table(name = "accounts")
 public class Account {
-
-    public static final String ALL_SORTED = "Account.getAllSorted";
-    public static final String CLEAR = "Account.clear";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
