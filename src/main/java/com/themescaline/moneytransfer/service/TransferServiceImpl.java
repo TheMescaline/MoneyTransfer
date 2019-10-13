@@ -11,6 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import javax.ws.rs.core.Response;
 import java.text.MessageFormat;
 
+import static com.themescaline.moneytransfer.util.ExceptionMessagesTemplates.NEGATIVE_DEPOSIT;
+import static com.themescaline.moneytransfer.util.ExceptionMessagesTemplates.NEGATIVE_TRANSFER;
+import static com.themescaline.moneytransfer.util.ExceptionMessagesTemplates.NEGATIVE_WITHDRAW;
+
 /**
  * Implementation of a service for transferring operations
  *
@@ -29,7 +33,7 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public void transfer(TransferInfoPacket packet) {
         if (packet.getAmount() < 0) {
-            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), "Amount of transferring money must not be negative");
+            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), NEGATIVE_TRANSFER.getMessageTemplate());
         }
         log.info(MessageFormat.format("Processing request of transferring {0} from account ID {1} to account ID {2}", packet.getAmount(), packet.getFromAccountId(), packet.getToAccountId()));
         accountDAO.transfer(packet.getFromAccountId(), packet.getToAccountId(), packet.getAmount());
@@ -38,7 +42,7 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public void withdraw(WithdrawInfoPacket packet) {
         if (packet.getAmount() < 0) {
-            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), "Amount of withdrawing money must not be negative");
+            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), NEGATIVE_WITHDRAW.getMessageTemplate());
         }
         log.info(MessageFormat.format("Processing request of withdrawing {0} from account ID {1}", packet.getAmount(), packet.getAccountId()));
         accountDAO.withdraw(packet.getAccountId(), packet.getAmount());
@@ -47,7 +51,7 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public void deposit(DepositInfoPacket packet) {
         if (packet.getAmount() < 0) {
-            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), "Amount of depositing money must not be negative");
+            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), NEGATIVE_DEPOSIT.getMessageTemplate());
         }
         log.info(MessageFormat.format("Processing request of depositing {0} to account ID {1}", packet.getAmount(), packet.getAccountId()));
         accountDAO.deposit(packet.getAccountId(), packet.getAmount());

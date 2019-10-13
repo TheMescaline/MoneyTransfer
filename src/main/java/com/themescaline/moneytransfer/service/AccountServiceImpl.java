@@ -6,10 +6,12 @@ import com.themescaline.moneytransfer.dao.AccountDAO;
 import com.themescaline.moneytransfer.exceptions.AppException;
 import com.themescaline.moneytransfer.model.Account;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.ws.rs.core.Response;
 import java.text.MessageFormat;
 import java.util.List;
+
+import static com.themescaline.moneytransfer.util.ExceptionMessagesTemplates.NEGATIVE_BALANCE;
+import static com.themescaline.moneytransfer.util.ExceptionMessagesTemplates.NOT_NEW_ACCOUNT;
 
 /**
  * Implementation of a service for Accounts management
@@ -38,10 +40,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account save(Account account) {
         if (account.getBalance() < 0) {
-            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), "Account balance can't be negative");
+            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), NEGATIVE_BALANCE.getMessageTemplate());
         }
         if (!account.isNew()) {
-            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), "Save account must be new (must not have id)");
+            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), NOT_NEW_ACCOUNT.getMessageTemplate());
         }
         log.info(MessageFormat.format("Processing request of saving account: {0}", account));
         return accountDAO.save(account);
@@ -50,7 +52,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account update(long accountId, Account account) {
         if (account.getBalance() < 0) {
-            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), "Account balance can't be negative");
+            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), NEGATIVE_BALANCE.getMessageTemplate());
         }
         account.setId(accountId);
         log.info(MessageFormat.format("Processing request of updating account id: {0} with data from {1}", accountId, account));

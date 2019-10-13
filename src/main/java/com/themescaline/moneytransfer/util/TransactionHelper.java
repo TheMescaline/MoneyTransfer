@@ -2,10 +2,10 @@ package com.themescaline.moneytransfer.util;
 
 import com.themescaline.moneytransfer.config.HibernateSessionFactoryHelper;
 import com.themescaline.moneytransfer.exceptions.AppException;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
 import javax.ws.rs.NotFoundException;
 
 /**
@@ -14,8 +14,9 @@ import javax.ws.rs.NotFoundException;
  * @author lex.korovin@gmail.com
  */
 @Slf4j
+@UtilityClass
 public class TransactionHelper {
-    public static <T> T transactionalExecute(TransactionalExecutor<T> transactionalExecutor) {
+    public <T> T transactionalExecute(TransactionalExecutor<T> transactionalExecutor) {
         T result = null;
         Transaction transaction = null;
         try {
@@ -35,7 +36,7 @@ public class TransactionHelper {
         return result;
     }
 
-    private static void rollbackTransaction(Transaction transaction) {
+    private void rollbackTransaction(Transaction transaction) {
         if (transaction != null) {
             transaction.rollback();
         }
