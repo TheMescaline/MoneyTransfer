@@ -3,9 +3,9 @@ package com.themescaline.moneytransfer.dao;
 import com.google.inject.Singleton;
 import com.themescaline.moneytransfer.exceptions.AppException;
 import com.themescaline.moneytransfer.model.Account;
+import com.themescaline.moneytransfer.util.ExceptionMessagesTemplates;
 import com.themescaline.moneytransfer.util.TransactionHelper;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.persistence.LockModeType;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
@@ -30,7 +30,7 @@ public class HibernateAccountDAO implements AccountDAO {
     public Account getOne(long accountId) {
         final Account account = TransactionHelper.transactionalExecute(session -> session.find(Account.class, accountId));
         if (account == null) {
-            throw new NotFoundException(MessageFormat.format("Account with id {0} not found", accountId));
+            throw new NotFoundException(MessageFormat.format(ExceptionMessagesTemplates.NOT_FOUND.getMessageTemplate(), accountId));
         }
         return account;
     }
@@ -50,7 +50,7 @@ public class HibernateAccountDAO implements AccountDAO {
                 session.update(temp);
                 return temp;
             }
-            throw new NotFoundException(MessageFormat.format("Can''t update account with id {0} because it doesn''t exists", account.getId()));
+            throw new NotFoundException(MessageFormat.format(ExceptionMessagesTemplates.CANT_UPDATE.getMessageTemplate(), account.getId()));
         });
     }
 
@@ -62,7 +62,7 @@ public class HibernateAccountDAO implements AccountDAO {
                 session.delete(toDelete);
                 return null;
             }
-            throw new NotFoundException(MessageFormat.format("Can''t delete account with id {0} because it doesn''t exists", accountId));
+            throw new NotFoundException(MessageFormat.format(ExceptionMessagesTemplates.CANT_DELETE.getMessageTemplate(), accountId));
         });
     }
 
@@ -72,13 +72,13 @@ public class HibernateAccountDAO implements AccountDAO {
             Account fromAccount = session.find(Account.class, fromAccountId, LockModeType.PESSIMISTIC_WRITE);
             Account toAccount = session.find(Account.class, toAccountId, LockModeType.PESSIMISTIC_WRITE);
             if (fromAccount == null) {
-                throw new NotFoundException(MessageFormat.format("Can''t find account with id {0}", fromAccountId));
+                throw new NotFoundException(MessageFormat.format(ExceptionMessagesTemplates.NOT_FOUND.getMessageTemplate(), fromAccountId));
             }
             if (toAccount == null) {
-                throw new NotFoundException(MessageFormat.format("Can''t find account with id {0}", toAccountId));
+                throw new NotFoundException(MessageFormat.format(ExceptionMessagesTemplates.NOT_FOUND.getMessageTemplate(), toAccountId));
             }
             if (fromAccount.getBalance() < amount) {
-                throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), MessageFormat.format("Can''t get {0} money from account with id {1}", amount, fromAccountId));
+                throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), MessageFormat.format(ExceptionMessagesTemplates.NOT_ENOUGH_MONEY.getMessageTemplate(), fromAccountId));
             }
             fromAccount.setBalance(fromAccount.getBalance() - amount);
             session.merge(fromAccount);
@@ -91,12 +91,31 @@ public class HibernateAccountDAO implements AccountDAO {
 
     @Override
     public void withdraw(long accountId, double amount) {
-
+        TransactionHelper.transactionalExecute(session -> {
+            Account account = session.find(Account.class, accountId);
+            if (account == null) {
+                throw new NotFoundException(MessageFormat.format(ExceptionMessagesTemplates.NOT_FOUND.getMessageTemplate(), accountId));
+            }
+            if (account.getBalance() < amount) {
+                throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), MessageFormat.format(ExceptionMessagesTemplates.NOT_ENOUGH_MONEY.getMessageTemplate(), accountId));
+            }
+            account.setBalance(account.getBalance() - amount);
+            session.merge(account);
+            return null;
+        });
     }
 
     @Override
     public void deposit(long accountId, double amount) {
-
+        TransactionHelper.transactionalExecute(session -> {
+            Account account = session.find(Account.class, accountId);
+            if (account == null) {
+                throw new NotFoundException(MessageFormat.format(ExceptionMessagesTemplates.NOT_FOUND.getMessageTemplate(), accountId));
+            }
+            account.setBalance(account.getBalance() + amount);
+            session.merge(account);
+            return null;
+        });
     }
 
     @Override
