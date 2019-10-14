@@ -2,6 +2,7 @@ package com.themescaline.moneytransfer.exceptions;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import javax.ws.rs.core.Response;
 
 /**
  * Application exception
@@ -10,7 +11,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AppException extends RuntimeException {
+public abstract class AppException extends RuntimeException {
 
     /**
      * contains redundantly the HTTP status of the response sent back to the client in case of error, so that
@@ -22,8 +23,8 @@ public class AppException extends RuntimeException {
      * @param status HTTP status of the response
      * @param message message, describing error
      */
-    public AppException(int status, String message) {
+    public AppException(Response.Status status, String message) {
         super(message);
-        this.status = status;
+        this.status = status.getStatusCode();
     }
 }

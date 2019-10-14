@@ -1,4 +1,4 @@
-package com.themescaline.moneytransfer.util;
+package com.themescaline.moneytransfer.model;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import lombok.Data;
  * @author lex.korovin@gmail.com
  */
 @Data
-public class YamlConnectionConfig {
+public class ConnectionConfigDTO {
     private String url;
     private String driver;
     private String user;

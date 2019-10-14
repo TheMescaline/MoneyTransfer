@@ -16,6 +16,10 @@ import org.glassfish.jersey.servlet.ServletContainer;
 @UtilityClass
 public class Launcher {
     private static final String JERSEY_SERVLET_NAME = "jersey-container-servlet";
+    private static final String DEFAULT_PORT = "8080";
+    private static final String PORT = "PORT";
+    private static final String CONTEXT_PATH = "";
+    private static final String APP_BASE = ".";
 
     public void main(String[] args) throws LifecycleException {
         String configFilePath = null;
@@ -27,19 +31,16 @@ public class Launcher {
     }
 
     private void start() throws LifecycleException {
-        String port = System.getenv("PORT");
+        String port = System.getenv(PORT);
         if (port == null || port.isEmpty()) {
-            port = "8080";
+            port = DEFAULT_PORT;
         }
-
-        String contextPath = "";
-        String appBase = ".";
 
         Tomcat tomcat = new Tomcat();
         tomcat.setPort(Integer.parseInt(port));
-        tomcat.getHost().setAppBase(appBase);
+        tomcat.getHost().setAppBase(APP_BASE);
 
-        Context context = tomcat.addContext(contextPath, appBase);
+        Context context = tomcat.addContext(CONTEXT_PATH, APP_BASE);
         Tomcat.addServlet(context, JERSEY_SERVLET_NAME,
                 new ServletContainer(new JerseyConfiguration()));
         context.addServletMappingDecoded("/api/*", JERSEY_SERVLET_NAME);

@@ -3,11 +3,12 @@ package com.themescaline.moneytransfer.service;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.themescaline.moneytransfer.config.TestAccountModule;
-import com.themescaline.moneytransfer.exceptions.AppException;
+import com.themescaline.moneytransfer.exceptions.AccountNotFoundException;
+import com.themescaline.moneytransfer.exceptions.BalanceException;
+import com.themescaline.moneytransfer.exceptions.NotNewAccountException;
 import com.themescaline.moneytransfer.model.Account;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import javax.ws.rs.NotFoundException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -47,7 +48,7 @@ class AccountServiceTest {
 
     @Test
     void getOneNotExisted() {
-        assertThrows(NotFoundException.class, () -> accountService.getOne(NOT_EXISTING.getId()));
+        assertThrows(AccountNotFoundException.class, () -> accountService.getOne(NOT_EXISTING.getId()));
     }
 
     @Test
@@ -57,12 +58,12 @@ class AccountServiceTest {
 
     @Test
     void saveExisting() {
-        assertThrows(AppException.class, () -> accountService.save(new Account(EXISTING_FIRST)));
+        assertThrows(NotNewAccountException.class, () -> accountService.save(new Account(EXISTING_FIRST)));
     }
 
     @Test
     void saveIncorrectBalance() {
-        assertThrows(AppException.class, () -> accountService.save(new Account(EXISTING_THIRD.getId(), EXISTING_THIRD.getBalance() - EXCEEDED_TRANSFER_AMOUNT)));
+        assertThrows(BalanceException.class, () -> accountService.save(new Account(EXISTING_THIRD.getId(), EXISTING_THIRD.getBalance() - EXCEEDED_TRANSFER_AMOUNT)));
     }
 
     @Test
@@ -74,7 +75,7 @@ class AccountServiceTest {
     @Test
     void updateNotExisted() {
         Account updated = new Account(NOT_EXISTING.getId(), NOT_EXISTING.getBalance() + NORMAL_TRANSFER_AMOUNT);
-        assertThrows(NotFoundException.class, () -> accountService.update(updated.getId(), updated));
+        assertThrows(AccountNotFoundException.class, () -> accountService.update(updated.getId(), updated));
     }
 
     @Test
@@ -85,7 +86,7 @@ class AccountServiceTest {
 
     @Test
     void deleteNotExisted() {
-        assertThrows(NotFoundException.class, () -> accountService.delete(NOT_EXISTING.getId()));
+        assertThrows(AccountNotFoundException.class, () -> accountService.delete(NOT_EXISTING.getId()));
     }
 
     @Test

@@ -3,15 +3,14 @@ package com.themescaline.moneytransfer.service;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.themescaline.moneytransfer.dao.AccountDAO;
-import com.themescaline.moneytransfer.exceptions.AppException;
+import com.themescaline.moneytransfer.exceptions.BalanceException;
+import com.themescaline.moneytransfer.exceptions.NotNewAccountException;
 import com.themescaline.moneytransfer.model.Account;
 import lombok.extern.slf4j.Slf4j;
-import javax.ws.rs.core.Response;
 import java.text.MessageFormat;
 import java.util.List;
 
-import static com.themescaline.moneytransfer.util.ExceptionMessagesTemplates.NEGATIVE_BALANCE;
-import static com.themescaline.moneytransfer.util.ExceptionMessagesTemplates.NOT_NEW_ACCOUNT;
+import static com.themescaline.moneytransfer.util.ExceptionMessage.NEGATIVE_BALANCE;
 
 /**
  * Implementation of a service for Accounts management
@@ -40,10 +39,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account save(Account account) {
         if (account.getBalance() < 0) {
-            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), NEGATIVE_BALANCE.getMessageTemplate());
+            throw new BalanceException(NEGATIVE_BALANCE);
         }
         if (!account.isNew()) {
-            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), NOT_NEW_ACCOUNT.getMessageTemplate());
+            throw new NotNewAccountException();
         }
         log.info(MessageFormat.format("Processing request of saving account: {0}", account));
         return accountDAO.save(account);
@@ -52,7 +51,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account update(long accountId, Account account) {
         if (account.getBalance() < 0) {
-            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), NEGATIVE_BALANCE.getMessageTemplate());
+            throw new BalanceException(NEGATIVE_BALANCE);
         }
         account.setId(accountId);
         log.info(MessageFormat.format("Processing request of updating account id: {0} with data from {1}", accountId, account));

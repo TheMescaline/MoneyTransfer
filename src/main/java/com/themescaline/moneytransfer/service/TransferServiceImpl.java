@@ -3,17 +3,16 @@ package com.themescaline.moneytransfer.service;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.themescaline.moneytransfer.dao.AccountDAO;
-import com.themescaline.moneytransfer.exceptions.AppException;
+import com.themescaline.moneytransfer.exceptions.IncorrectDataPacketException;
 import com.themescaline.moneytransfer.model.DepositInfoPacket;
 import com.themescaline.moneytransfer.model.TransferInfoPacket;
 import com.themescaline.moneytransfer.model.WithdrawInfoPacket;
 import lombok.extern.slf4j.Slf4j;
-import javax.ws.rs.core.Response;
 import java.text.MessageFormat;
 
-import static com.themescaline.moneytransfer.util.ExceptionMessagesTemplates.NEGATIVE_DEPOSIT;
-import static com.themescaline.moneytransfer.util.ExceptionMessagesTemplates.NEGATIVE_TRANSFER;
-import static com.themescaline.moneytransfer.util.ExceptionMessagesTemplates.NEGATIVE_WITHDRAW;
+import static com.themescaline.moneytransfer.util.ExceptionMessage.NEGATIVE_DEPOSIT;
+import static com.themescaline.moneytransfer.util.ExceptionMessage.NEGATIVE_TRANSFER;
+import static com.themescaline.moneytransfer.util.ExceptionMessage.NEGATIVE_WITHDRAW;
 
 /**
  * Implementation of a service for transferring operations
@@ -33,7 +32,7 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public void transfer(TransferInfoPacket packet) {
         if (packet.getAmount() < 0) {
-            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), NEGATIVE_TRANSFER.getMessageTemplate());
+            throw new IncorrectDataPacketException(NEGATIVE_TRANSFER);
         }
         log.info(MessageFormat.format("Processing request of transferring {0} from account ID {1} to account ID {2}", packet.getAmount(), packet.getFromAccountId(), packet.getToAccountId()));
         accountDAO.transfer(packet.getFromAccountId(), packet.getToAccountId(), packet.getAmount());
@@ -42,7 +41,7 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public void withdraw(WithdrawInfoPacket packet) {
         if (packet.getAmount() < 0) {
-            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), NEGATIVE_WITHDRAW.getMessageTemplate());
+            throw new IncorrectDataPacketException(NEGATIVE_WITHDRAW);
         }
         log.info(MessageFormat.format("Processing request of withdrawing {0} from account ID {1}", packet.getAmount(), packet.getAccountId()));
         accountDAO.withdraw(packet.getAccountId(), packet.getAmount());
@@ -51,7 +50,7 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public void deposit(DepositInfoPacket packet) {
         if (packet.getAmount() < 0) {
-            throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(), NEGATIVE_DEPOSIT.getMessageTemplate());
+            throw new IncorrectDataPacketException(NEGATIVE_DEPOSIT);
         }
         log.info(MessageFormat.format("Processing request of depositing {0} to account ID {1}", packet.getAmount(), packet.getAccountId()));
         accountDAO.deposit(packet.getAccountId(), packet.getAmount());

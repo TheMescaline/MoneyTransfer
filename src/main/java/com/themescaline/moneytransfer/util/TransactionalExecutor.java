@@ -9,5 +9,5 @@ import org.hibernate.Session;
  * @author lex.korovin@gmail.com
  */
 public interface TransactionalExecutor<T> {
-    T execute(Session session);
+    T execute(Session session) throws InterruptedException;
 }

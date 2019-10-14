@@ -1,7 +1,8 @@
-package com.themescaline.moneytransfer.config;
+package com.themescaline.moneytransfer.util;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.themescaline.moneytransfer.config.AccountModule;
 import lombok.experimental.UtilityClass;
 
 /**

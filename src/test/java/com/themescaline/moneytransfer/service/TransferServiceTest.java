@@ -3,14 +3,15 @@ package com.themescaline.moneytransfer.service;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.themescaline.moneytransfer.config.TestAccountModule;
-import com.themescaline.moneytransfer.exceptions.AppException;
+import com.themescaline.moneytransfer.exceptions.AccountNotFoundException;
+import com.themescaline.moneytransfer.exceptions.BalanceException;
+import com.themescaline.moneytransfer.exceptions.IncorrectDataPacketException;
 import com.themescaline.moneytransfer.model.Account;
 import com.themescaline.moneytransfer.model.DepositInfoPacket;
 import com.themescaline.moneytransfer.model.TransferInfoPacket;
 import com.themescaline.moneytransfer.model.WithdrawInfoPacket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import javax.ws.rs.NotFoundException;
 
 import static com.themescaline.moneytransfer.TestAccountDataHelper.EXCEEDED_TRANSFER_AMOUNT;
 import static com.themescaline.moneytransfer.TestAccountDataHelper.EXISTING_FIRST;
@@ -44,12 +45,12 @@ class TransferServiceTest {
 
     @Test
     void doTransferFailure() {
-        assertThrows(AppException.class, () -> transferService.transfer(new TransferInfoPacket(EXISTING_FIRST.getId(), EXISTING_SECOND.getId(), EXCEEDED_TRANSFER_AMOUNT)));
+        assertThrows(BalanceException.class, () -> transferService.transfer(new TransferInfoPacket(EXISTING_FIRST.getId(), EXISTING_SECOND.getId(), EXCEEDED_TRANSFER_AMOUNT)));
     }
 
     @Test
     void doTransferNotExist() {
-        assertThrows(NotFoundException.class, () -> transferService.transfer(new TransferInfoPacket(NOT_EXISTING.getId(), EXISTING_SECOND.getId(), EXCEEDED_TRANSFER_AMOUNT)));
+        assertThrows(AccountNotFoundException.class, () -> transferService.transfer(new TransferInfoPacket(NOT_EXISTING.getId(), EXISTING_SECOND.getId(), EXCEEDED_TRANSFER_AMOUNT)));
     }
 
     @Test
@@ -60,12 +61,12 @@ class TransferServiceTest {
 
     @Test
     void doWithdrawFailure() {
-        assertThrows(AppException.class, () -> transferService.withdraw(new WithdrawInfoPacket(EXISTING_FIRST.getId(), EXCEEDED_TRANSFER_AMOUNT)));
+        assertThrows(BalanceException.class, () -> transferService.withdraw(new WithdrawInfoPacket(EXISTING_FIRST.getId(), EXCEEDED_TRANSFER_AMOUNT)));
     }
 
     @Test
     void doWithdrawNotExist() {
-        assertThrows(NotFoundException.class, () -> transferService.withdraw(new WithdrawInfoPacket(NOT_EXISTING.getId(), EXCEEDED_TRANSFER_AMOUNT)));
+        assertThrows(AccountNotFoundException.class, () -> transferService.withdraw(new WithdrawInfoPacket(NOT_EXISTING.getId(), EXCEEDED_TRANSFER_AMOUNT)));
     }
 
     @Test
@@ -76,11 +77,11 @@ class TransferServiceTest {
 
     @Test
     void doDepositFailure() {
-        assertThrows(AppException.class, () -> transferService.deposit(new DepositInfoPacket(EXISTING_FIRST.getId(), NEGATIVE_AMOUNT)));
+        assertThrows(IncorrectDataPacketException.class, () -> transferService.deposit(new DepositInfoPacket(EXISTING_FIRST.getId(), NEGATIVE_AMOUNT)));
     }
 
     @Test
     void doDepositNotExist() {
-        assertThrows(NotFoundException.class, () -> transferService.deposit(new DepositInfoPacket(NOT_EXISTING.getId(), EXCEEDED_TRANSFER_AMOUNT)));
+        assertThrows(AccountNotFoundException.class, () -> transferService.deposit(new DepositInfoPacket(NOT_EXISTING.getId(), EXCEEDED_TRANSFER_AMOUNT)));
     }
 }

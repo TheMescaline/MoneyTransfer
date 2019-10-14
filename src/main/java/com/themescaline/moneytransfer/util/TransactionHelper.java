@@ -2,11 +2,12 @@ package com.themescaline.moneytransfer.util;
 
 import com.themescaline.moneytransfer.config.HibernateSessionFactoryHelper;
 import com.themescaline.moneytransfer.exceptions.AppException;
-import lombok.experimental.UtilityClass;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import javax.ws.rs.NotFoundException;
+import java.util.concurrent.Callable;
 
 /**
  * Transactional strategy executor
@@ -14,10 +15,13 @@ import javax.ws.rs.NotFoundException;
  * @author lex.korovin@gmail.com
  */
 @Slf4j
-@UtilityClass
-public class TransactionHelper {
-    public <T> T transactionalExecute(TransactionalExecutor<T> transactionalExecutor) {
-        T result = null;
+@AllArgsConstructor
+public class TransactionHelper<T> implements Callable<T> {
+    private final TransactionalExecutor<T> transactionalExecutor;
+
+    @Override
+    public T call() throws InterruptedException {
+        T result;
         Transaction transaction = null;
         try {
             Session session = HibernateSessionFactoryHelper.getSessionFactory().openSession();
@@ -25,13 +29,10 @@ public class TransactionHelper {
             result = transactionalExecutor.execute(session);
             transaction.commit();
             session.close();
-        } catch (NotFoundException | AppException e) {
+        } catch (NotFoundException | AppException | InterruptedException e) {
             log.error(e.getMessage());
             rollbackTransaction(transaction);
             throw e;
-        } catch (Exception e) {
-            rollbackTransaction(transaction);
-            log.error(e.getMessage());
         }
         return result;
     }

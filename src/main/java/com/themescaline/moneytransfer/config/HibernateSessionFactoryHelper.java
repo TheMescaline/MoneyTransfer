@@ -1,9 +1,10 @@
 package com.themescaline.moneytransfer.config;
 
 import com.themescaline.moneytransfer.model.Account;
-import com.themescaline.moneytransfer.util.ExceptionMessagesTemplates;
-import com.themescaline.moneytransfer.util.YamlConnectionConfig;
+import com.themescaline.moneytransfer.model.ConnectionConfigDTO;
+import com.themescaline.moneytransfer.util.ExceptionMessage;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -12,22 +13,39 @@ import org.hibernate.service.ServiceRegistry;
 import org.yaml.snakeyaml.Yaml;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.text.MessageFormat;
 import java.util.Properties;
+
+import static com.themescaline.moneytransfer.util.ExceptionMessage.SERVER_CONFIGURATION_ERROR;
 
 /**
  * Hibernate session factory
  *
  * @author lex.korovin@gmail.com
  */
+@Slf4j
 @UtilityClass
 public class HibernateSessionFactoryHelper {
     private static final String DEFAULT_PROPS = "properties.yml";
+    private static final String FALSE = "false";
+    private static final String UPDATE = "update";
+    private Integer poolSize;
 
     private SessionFactory sessionFactory;
 
     public SessionFactory getSessionFactory() {
+        if (sessionFactory == null) {
+            //default H2 connection settings
+            init(null);
+        }
         return sessionFactory;
+    }
+
+    public int getPoolSize() {
+        if (poolSize == null) {
+            //default H2 connection settings
+            init(null);
+        }
+        return poolSize;
     }
 
     public void init(String configFilePath) {
@@ -37,8 +55,9 @@ public class HibernateSessionFactoryHelper {
                     HibernateSessionFactoryHelper.class.getClassLoader().getResourceAsStream(DEFAULT_PROPS) :
                     new FileInputStream(configFilePath)) {
                 Yaml yaml = new Yaml();
-                YamlConnectionConfig config = yaml.loadAs(in, YamlConnectionConfig.class);
+                ConnectionConfigDTO config = yaml.loadAs(in, ConnectionConfigDTO.class);
                 Configuration configuration = new Configuration();
+                poolSize = config.getPoolSize();
 
                 Properties settings = new Properties();
                 settings.put(Environment.DRIVER, config.getDriver());
@@ -46,11 +65,10 @@ public class HibernateSessionFactoryHelper {
                 settings.put(Environment.USER, config.getUser());
                 settings.put(Environment.PASS, config.getPassword());
                 settings.put(Environment.POOL_SIZE, config.getPoolSize());
-                settings.put(Environment.SHOW_SQL, "false");
-                settings.put(Environment.HBM2DDL_AUTO, "update");
+                settings.put(Environment.SHOW_SQL, FALSE);
+                settings.put(Environment.HBM2DDL_AUTO, UPDATE);
 
                 configuration.setProperties(settings);
-
                 configuration.addAnnotatedClass(Account.class);
 
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
@@ -58,7 +76,8 @@ public class HibernateSessionFactoryHelper {
 
                 sessionFactory = configuration.buildSessionFactory(serviceRegistry);
             } catch (Exception e) {
-                throw new RuntimeException(MessageFormat.format(ExceptionMessagesTemplates.SERVER_CONFIGURATION_ERROR.getMessageTemplate(),
+                log.error(e.getMessage(), e);
+                throw new RuntimeException(ExceptionMessage.getFormatted(SERVER_CONFIGURATION_ERROR,
                         e.getMessage()), e);
             }
         }

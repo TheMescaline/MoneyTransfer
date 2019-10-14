@@ -2,8 +2,6 @@ package com.themescaline.moneytransfer.exceptions;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -34,8 +32,8 @@ public class ErrorMessage {
         this.message = ex.getMessage();
     }
 
-    public ErrorMessage(NotFoundException ex) {
-        this.status = Response.Status.NOT_FOUND.getStatusCode();
+    public ErrorMessage(Exception ex, int status) {
+        this.status = status;
         this.message = ex.getMessage();
     }
 }

@@ -1,10 +1,10 @@
 package com.themescaline.moneytransfer.web;
 
-import com.themescaline.moneytransfer.config.BeanHelper;
 import com.themescaline.moneytransfer.model.DepositInfoPacket;
 import com.themescaline.moneytransfer.model.TransferInfoPacket;
 import com.themescaline.moneytransfer.model.WithdrawInfoPacket;
 import com.themescaline.moneytransfer.service.TransferService;
+import com.themescaline.moneytransfer.util.BeanHelper;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;

@@ -1,9 +1,9 @@
 package com.themescaline.moneytransfer.web;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.themescaline.moneytransfer.config.BeanHelper;
 import com.themescaline.moneytransfer.model.Account;
 import com.themescaline.moneytransfer.service.AccountService;
+import com.themescaline.moneytransfer.util.BeanHelper;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.annotation.JacksonFeatures;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;

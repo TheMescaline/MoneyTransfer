@@ -9,7 +9,7 @@ import java.util.List;
  * @author lex.korovin@gmail.com
  */
 public interface AccountDAO {
-    String ALL_SORTED = "from Account";
+    String ALL_SORTED = "from Account a order by a.id";
     String CLEAR = "DELETE FROM Account";
 
     List<Account> getAll();
@@ -24,9 +24,9 @@ public interface AccountDAO {
 
     void transfer(long fromAccountId, long toAccountId, double amount);
 
-    void clear();
-
     void withdraw(long accountId, double amount);
 
     void deposit(long accountId, double amount);
+
+    void clear();
 }

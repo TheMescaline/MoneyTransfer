@@ -1,5 +1,7 @@
-package com.themescaline.moneytransfer.exceptions;
+package com.themescaline.moneytransfer.exceptions.mappers;
 
+import com.themescaline.moneytransfer.exceptions.AppException;
+import com.themescaline.moneytransfer.exceptions.ErrorMessage;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
