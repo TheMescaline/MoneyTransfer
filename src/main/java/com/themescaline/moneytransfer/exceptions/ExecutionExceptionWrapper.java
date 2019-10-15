@@ -2,8 +2,14 @@ package com.themescaline.moneytransfer.exceptions;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Wrapper for ExecutionExceptions that are thrown from executor service
+ *
+ * @author lex.korovin@gmail.com
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class ExecutionExceptionWrapper extends RuntimeException {

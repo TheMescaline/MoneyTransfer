@@ -7,10 +7,11 @@ import com.themescaline.moneytransfer.exceptions.BalanceException;
 import com.themescaline.moneytransfer.exceptions.NotNewAccountException;
 import com.themescaline.moneytransfer.model.Account;
 import lombok.extern.slf4j.Slf4j;
+
 import java.text.MessageFormat;
 import java.util.List;
 
-import static com.themescaline.moneytransfer.util.ExceptionMessage.NEGATIVE_BALANCE;
+import static com.themescaline.moneytransfer.exceptions.ExceptionMessage.NEGATIVE_BALANCE;
 
 /**
  * Implementation of a service for Accounts management
@@ -62,11 +63,5 @@ public class AccountServiceImpl implements AccountService {
     public void delete(long accountId) {
         log.info(MessageFormat.format("Processing request of deleting account with id = {0}", accountId));
         accountDAO.delete(accountId);
-    }
-
-    @Override
-    public void clear() {
-        log.info("Processing request of clearing storage");
-        accountDAO.clear();
     }
 }

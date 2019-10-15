@@ -1,8 +1,12 @@
 package com.themescaline.moneytransfer.exceptions;
 
-import com.themescaline.moneytransfer.util.ExceptionMessage;
 import javax.ws.rs.core.Response;
 
+/**
+ * Exception or incorrect data inside DataPackets
+ *
+ * @author lex.korovin@gmail.com
+ */
 public class IncorrectDataPacketException extends AppException {
     /**
      * @param exceptionMessage exceptionMessage, describing error

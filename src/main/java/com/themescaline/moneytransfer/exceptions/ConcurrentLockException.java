@@ -1,10 +1,14 @@
 package com.themescaline.moneytransfer.exceptions;
 
-import com.themescaline.moneytransfer.util.ExceptionMessage;
 import javax.ws.rs.core.Response;
 
-import static com.themescaline.moneytransfer.util.ExceptionMessage.ACCOUNT_LOCKED;
+import static com.themescaline.moneytransfer.exceptions.ExceptionMessage.ACCOUNT_LOCKED;
 
+/**
+ * Unlock wait timeout exception
+ *
+ * @author lex.korovin@gmail.com
+ */
 public class ConcurrentLockException extends AppException {
     /**
      * @param accountId account Id

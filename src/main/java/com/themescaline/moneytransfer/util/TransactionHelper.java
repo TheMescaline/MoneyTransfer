@@ -6,21 +6,20 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
 import javax.ws.rs.NotFoundException;
-import java.util.concurrent.Callable;
 
 /**
- * Transactional strategy executor
+ * Abstract transactional strategy executor to reduce try/catch/rollback boilerplate code
  *
  * @author lex.korovin@gmail.com
  */
 @Slf4j
 @AllArgsConstructor
-public class TransactionHelper<T> implements Callable<T> {
-    private final TransactionalExecutor<T> transactionalExecutor;
+abstract class TransactionHelper<T> {
+    protected final TransactionalExecutor<T> transactionalExecutor;
 
-    @Override
-    public T call() throws InterruptedException {
+    T execute() throws InterruptedException {
         T result;
         Transaction transaction = null;
         try {

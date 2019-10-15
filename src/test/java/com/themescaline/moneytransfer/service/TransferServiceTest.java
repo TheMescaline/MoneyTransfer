@@ -3,6 +3,7 @@ package com.themescaline.moneytransfer.service;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.themescaline.moneytransfer.config.TestAccountModule;
+import com.themescaline.moneytransfer.dao.InMemoryAccountDAO;
 import com.themescaline.moneytransfer.exceptions.AccountNotFoundException;
 import com.themescaline.moneytransfer.exceptions.BalanceException;
 import com.themescaline.moneytransfer.exceptions.IncorrectDataPacketException;
@@ -26,12 +27,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TransferServiceTest {
     private Injector injector = Guice.createInjector(new TestAccountModule());
+    private InMemoryAccountDAO dao = injector.getInstance(InMemoryAccountDAO.class);
     private TransferService transferService = injector.getInstance(TransferService.class);
     private AccountService accountService = injector.getInstance(AccountService.class);
 
     @BeforeEach
     void setUp() {
-        accountService.clear();
+        dao.clear();
         accountService.save(new Account(NEW_FIRST));
         accountService.save(new Account(NEW_SECOND));
     }

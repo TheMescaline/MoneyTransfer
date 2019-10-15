@@ -2,6 +2,11 @@ package com.themescaline.moneytransfer.exceptions;
 
 import javax.ws.rs.core.Response;
 
+/**
+ * General uncategorized exception
+ *
+ * @author lex.korovin@gmail.com
+ */
 public class UncategorizedException extends AppException {
     /**
      * @param message message, describing error

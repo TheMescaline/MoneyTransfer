@@ -1,6 +1,7 @@
 package com.themescaline.moneytransfer.dao;
 
 import com.themescaline.moneytransfer.model.Account;
+
 import java.util.List;
 
 /**
@@ -9,8 +10,10 @@ import java.util.List;
  * @author lex.korovin@gmail.com
  */
 public interface AccountDAO {
+    /**
+     * Query for get all operations
+     */
     String ALL_SORTED = "from Account a order by a.id";
-    String CLEAR = "DELETE FROM Account";
 
     List<Account> getAll();
 
@@ -27,6 +30,4 @@ public interface AccountDAO {
     void withdraw(long accountId, double amount);
 
     void deposit(long accountId, double amount);
-
-    void clear();
 }

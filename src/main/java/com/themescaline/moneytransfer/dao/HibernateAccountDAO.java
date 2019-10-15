@@ -4,24 +4,21 @@ import com.google.inject.Singleton;
 import com.themescaline.moneytransfer.config.HibernateSessionFactoryHelper;
 import com.themescaline.moneytransfer.exceptions.AccountNotFoundException;
 import com.themescaline.moneytransfer.exceptions.BalanceException;
-import com.themescaline.moneytransfer.exceptions.ConcurrentLockException;
 import com.themescaline.moneytransfer.model.Account;
-import com.themescaline.moneytransfer.util.TransactionHelper;
 import com.themescaline.moneytransfer.util.multithread.AccountLocker;
-import com.themescaline.moneytransfer.util.multithread.TryCatchWithLockWrapper;
 import com.themescaline.moneytransfer.util.multithread.TryCatchWrapper;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
-import static com.themescaline.moneytransfer.util.ExceptionMessage.NOT_ENOUGH_MONEY;
+import static com.themescaline.moneytransfer.exceptions.ExceptionMessage.NOT_ENOUGH_MONEY;
 
 /**
- * Account DAO implementation
+ * Account DAO implementation with concurrent access based on concurrency
  *
  * @author lex.korovin@gmail.com
  */
@@ -35,12 +32,12 @@ public class HibernateAccountDAO implements AccountDAO {
     @SuppressWarnings("unchecked")
     @Override
     public List<Account> getAll() {
-        return TryCatchWrapper.wrap(service, session -> session.createQuery(ALL_SORTED).list());
+        return TryCatchWrapper.wrapWithoutLock(service, session -> session.createQuery(ALL_SORTED).list());
     }
 
     @Override
     public Account getOne(long accountId) {
-        return TryCatchWrapper.wrap(service, session -> {
+        return TryCatchWrapper.wrapWithoutLock(service, session -> {
             Account result = session.find(Account.class, accountId);
             checkNotFound(result, accountId);
             return result;
@@ -49,7 +46,7 @@ public class HibernateAccountDAO implements AccountDAO {
 
     @Override
     public Account save(Account account) {
-        return TryCatchWrapper.wrap(service, session -> {
+        return TryCatchWrapper.wrapWithoutLock(service, session -> {
             session.save(account);
             return account;
         });
@@ -57,7 +54,7 @@ public class HibernateAccountDAO implements AccountDAO {
 
     @Override
     public Account update(Account account) {
-        return TryCatchWithLockWrapper.wrap(service, account.getId(), currentLockedAccounts, session -> {
+        return TryCatchWrapper.wrapWithSingleLock(service, account.getId(), currentLockedAccounts, session -> {
             Account updated = session.find(Account.class, account.getId());
             checkNotFound(updated, account.getId());
             updated.setBalance(account.getBalance());
@@ -68,8 +65,7 @@ public class HibernateAccountDAO implements AccountDAO {
 
     @Override
     public void delete(long accountId) {
-        TryCatchWithLockWrapper.wrap(service, accountId, currentLockedAccounts, session -> {
-
+        TryCatchWrapper.wrapWithSingleLock(service, accountId, currentLockedAccounts, session -> {
             Account toDelete = session.find(Account.class, accountId);
             checkNotFound(toDelete, accountId);
             session.delete(toDelete);
@@ -80,43 +76,23 @@ public class HibernateAccountDAO implements AccountDAO {
 
     @Override
     public void transfer(long fromAccountId, long toAccountId, double amount) {
-        TryCatchWrapper.wrap(service, session -> {
-            long firstLockedId = Math.min(fromAccountId, toAccountId);
-            long secondLockedId = Math.max(fromAccountId, toAccountId);
-            currentLockedAccounts.putIfAbsent(firstLockedId, new AccountLocker(firstLockedId));
-            if (currentLockedAccounts.get(firstLockedId).getLock().tryLock(LOCK_WAITING_SECONDS, TimeUnit.SECONDS)) {
-                try {
-                    currentLockedAccounts.putIfAbsent(secondLockedId, new AccountLocker(secondLockedId));
-                    if (currentLockedAccounts.get(secondLockedId).getLock().tryLock(LOCK_WAITING_SECONDS, TimeUnit.SECONDS)) {
-                        try {
-                            Account fromAccount = session.find(Account.class, fromAccountId);
-                            Account toAccount = session.find(Account.class, toAccountId);
-                            checkNotFound(fromAccount, fromAccountId);
-                            checkNotFound(toAccount, toAccountId);
-                            checkNotEnoughMoney(amount, fromAccount);
-                            fromAccount.setBalance(fromAccount.getBalance() - amount);
-                            session.merge(fromAccount);
-                            toAccount.setBalance(toAccount.getBalance() + amount);
-                            session.merge(toAccount);
-                        } finally {
-                            currentLockedAccounts.get(secondLockedId).getLock().unlock();
-                        }
-                    } else {
-                        throw new ConcurrentLockException(secondLockedId);
-                    }
-                } finally {
-                    currentLockedAccounts.get(firstLockedId).getLock().unlock();
-                }
-            } else {
-                throw new ConcurrentLockException(firstLockedId);
-            }
+        TryCatchWrapper.wrapWithDoubleLock(service, fromAccountId, toAccountId, currentLockedAccounts, session -> {
+            Account fromAccount = session.find(Account.class, fromAccountId);
+            Account toAccount = session.find(Account.class, toAccountId);
+            checkNotFound(fromAccount, fromAccountId);
+            checkNotFound(toAccount, toAccountId);
+            checkNotEnoughMoney(amount, fromAccount);
+            fromAccount.setBalance(fromAccount.getBalance() - amount);
+            session.merge(fromAccount);
+            toAccount.setBalance(toAccount.getBalance() + amount);
+            session.merge(toAccount);
             return null;
         });
     }
 
     @Override
     public void withdraw(long accountId, double amount) {
-        TryCatchWithLockWrapper.wrap(service, accountId, currentLockedAccounts, session -> {
+        TryCatchWrapper.wrapWithSingleLock(service, accountId, currentLockedAccounts, session -> {
             Account account = session.find(Account.class, accountId);
             checkNotFound(account, accountId);
             checkNotEnoughMoney(amount, account);
@@ -128,18 +104,13 @@ public class HibernateAccountDAO implements AccountDAO {
 
     @Override
     public void deposit(long accountId, double amount) {
-        TryCatchWithLockWrapper.wrap(service, accountId, currentLockedAccounts, session -> {
+        TryCatchWrapper.wrapWithSingleLock(service, accountId, currentLockedAccounts, session -> {
             Account account = session.find(Account.class, accountId);
             checkNotFound(account, accountId);
             account.setBalance(account.getBalance() + amount);
             session.merge(account);
             return null;
         });
-    }
-
-    @Override
-    public void clear() {
-        service.submit(new TransactionHelper<>(session -> session.createQuery(CLEAR).executeUpdate()));
     }
 
     private void checkNotFound(Account account, long expectedAccountId) {

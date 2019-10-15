@@ -1,7 +1,12 @@
-package com.themescaline.moneytransfer.util;
+package com.themescaline.moneytransfer.exceptions;
 
 import java.text.MessageFormat;
 
+/**
+ * Exception messages and templates
+ *
+ * @author lex.korovin@gmail.com
+ */
 public enum ExceptionMessage {
     NOT_NEW_ACCOUNT("Save account must be new (must not have ID)"),
     NEGATIVE_BALANCE("Account balance can''t be negative"),

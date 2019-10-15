@@ -2,6 +2,7 @@ package com.themescaline.moneytransfer.exceptions;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 import javax.ws.rs.core.Response;
 
 /**
@@ -20,7 +21,7 @@ public abstract class AppException extends RuntimeException {
     private int status;
 
     /**
-     * @param status HTTP status of the response
+     * @param status  HTTP status of the response
      * @param message message, describing error
      */
     public AppException(Response.Status status, String message) {

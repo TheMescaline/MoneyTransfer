@@ -21,6 +21,4 @@ public interface AccountService {
     Account update(long accountId, Account account);
 
     void delete(long accountId);
-
-    void clear();
 }

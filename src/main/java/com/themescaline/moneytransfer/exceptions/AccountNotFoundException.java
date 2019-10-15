@@ -1,8 +1,12 @@
 package com.themescaline.moneytransfer.exceptions;
 
-import com.themescaline.moneytransfer.util.ExceptionMessage;
 import javax.ws.rs.core.Response;
 
+/**
+ * Account not found exception
+ *
+ * @author lex.korovin@gmail.com
+ */
 public class AccountNotFoundException extends AppException {
     /**
      * @param accountId account id

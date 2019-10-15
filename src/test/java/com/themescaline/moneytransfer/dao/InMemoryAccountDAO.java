@@ -3,16 +3,17 @@ package com.themescaline.moneytransfer.dao;
 import com.google.inject.Singleton;
 import com.themescaline.moneytransfer.exceptions.AccountNotFoundException;
 import com.themescaline.moneytransfer.exceptions.BalanceException;
+import com.themescaline.moneytransfer.exceptions.ExceptionMessage;
 import com.themescaline.moneytransfer.model.Account;
-import com.themescaline.moneytransfer.util.ExceptionMessage;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import static com.themescaline.moneytransfer.util.ExceptionMessage.NEGATIVE_BALANCE;
+import static com.themescaline.moneytransfer.exceptions.ExceptionMessage.NEGATIVE_BALANCE;
 
 @Slf4j
 @Singleton
@@ -104,7 +105,6 @@ public class InMemoryAccountDAO implements AccountDAO {
         storage.put(to.getId(), to);
     }
 
-    @Override
     public void clear() {
         storage.clear();
         counter.set(0L);

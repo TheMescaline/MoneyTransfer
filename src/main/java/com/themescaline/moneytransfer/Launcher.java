@@ -30,6 +30,10 @@ public class Launcher {
         start();
     }
 
+    /**
+     * Initialize Tomcat Embed server
+     * @throws LifecycleException
+     */
     private void start() throws LifecycleException {
         String port = System.getenv(PORT);
         if (port == null || port.isEmpty()) {

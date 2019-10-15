@@ -4,11 +4,18 @@ import com.themescaline.moneytransfer.exceptions.AppException;
 import com.themescaline.moneytransfer.exceptions.ErrorMessage;
 import com.themescaline.moneytransfer.exceptions.ExecutionExceptionWrapper;
 import lombok.extern.slf4j.Slf4j;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+/**
+ * Mapper for ExecutionExceptions.
+ * Extracts AppException that was thrown inside ExecutorService
+ *
+ * @author lex.korovin@gmail.com
+ */
 @Slf4j
 @Provider
 public class ExecutionExceptionWrapperMapper implements ExceptionMapper<ExecutionExceptionWrapper> {

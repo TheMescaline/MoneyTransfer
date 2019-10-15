@@ -8,11 +8,12 @@ import com.themescaline.moneytransfer.model.DepositInfoPacket;
 import com.themescaline.moneytransfer.model.TransferInfoPacket;
 import com.themescaline.moneytransfer.model.WithdrawInfoPacket;
 import lombok.extern.slf4j.Slf4j;
+
 import java.text.MessageFormat;
 
-import static com.themescaline.moneytransfer.util.ExceptionMessage.NEGATIVE_DEPOSIT;
-import static com.themescaline.moneytransfer.util.ExceptionMessage.NEGATIVE_TRANSFER;
-import static com.themescaline.moneytransfer.util.ExceptionMessage.NEGATIVE_WITHDRAW;
+import static com.themescaline.moneytransfer.exceptions.ExceptionMessage.NEGATIVE_DEPOSIT;
+import static com.themescaline.moneytransfer.exceptions.ExceptionMessage.NEGATIVE_TRANSFER;
+import static com.themescaline.moneytransfer.exceptions.ExceptionMessage.NEGATIVE_WITHDRAW;
 
 /**
  * Implementation of a service for transferring operations

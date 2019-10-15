@@ -1,8 +1,8 @@
 package com.themescaline.moneytransfer.config;
 
+import com.themescaline.moneytransfer.exceptions.ExceptionMessage;
 import com.themescaline.moneytransfer.model.Account;
 import com.themescaline.moneytransfer.model.ConnectionConfigDTO;
-import com.themescaline.moneytransfer.util.ExceptionMessage;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
@@ -11,11 +11,12 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 import org.yaml.snakeyaml.Yaml;
+
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
-import static com.themescaline.moneytransfer.util.ExceptionMessage.SERVER_CONFIGURATION_ERROR;
+import static com.themescaline.moneytransfer.exceptions.ExceptionMessage.SERVER_CONFIGURATION_ERROR;
 
 /**
  * Hibernate session factory
@@ -34,7 +35,7 @@ public class HibernateSessionFactoryHelper {
 
     public SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
-            //default H2 connection settings
+            //default H2 connection settings, if method init() was not called from Launcher
             init(null);
         }
         return sessionFactory;
@@ -42,7 +43,7 @@ public class HibernateSessionFactoryHelper {
 
     public int getPoolSize() {
         if (poolSize == null) {
-            //default H2 connection settings
+            //default H2 connection settings, if method init() was not called from Launcher
             init(null);
         }
         return poolSize;
