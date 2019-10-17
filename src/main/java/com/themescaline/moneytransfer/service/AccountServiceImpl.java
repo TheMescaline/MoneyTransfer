@@ -8,6 +8,7 @@ import com.themescaline.moneytransfer.exceptions.NotNewAccountException;
 import com.themescaline.moneytransfer.model.Account;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account save(Account account) {
-        if (account.getBalance() < 0) {
+        if (account.getBalance().compareTo(BigDecimal.ZERO) < 0) {
             throw new BalanceException(NEGATIVE_BALANCE);
         }
         if (!account.isNew()) {
@@ -51,7 +52,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account update(long accountId, Account account) {
-        if (account.getBalance() < 0) {
+        if (account.getBalance().compareTo(BigDecimal.ZERO) < 0) {
             throw new BalanceException(NEGATIVE_BALANCE);
         }
         account.setId(accountId);

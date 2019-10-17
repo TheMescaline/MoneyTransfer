@@ -41,8 +41,8 @@ class TransferServiceTest {
     @Test
     void doTransferSuccess() {
         transferService.transfer(new TransferInfoPacket(EXISTING_FIRST.getId(), EXISTING_SECOND.getId(), NORMAL_TRANSFER_AMOUNT));
-        assertEquals(EXISTING_FIRST.getBalance() - NORMAL_TRANSFER_AMOUNT, accountService.getOne(EXISTING_FIRST.getId()).getBalance());
-        assertEquals(EXISTING_SECOND.getBalance() + NORMAL_TRANSFER_AMOUNT, accountService.getOne(EXISTING_SECOND.getId()).getBalance());
+        assertEquals(EXISTING_FIRST.getBalance().subtract(NORMAL_TRANSFER_AMOUNT), accountService.getOne(EXISTING_FIRST.getId()).getBalance());
+        assertEquals(EXISTING_SECOND.getBalance().add(NORMAL_TRANSFER_AMOUNT), accountService.getOne(EXISTING_SECOND.getId()).getBalance());
     }
 
     @Test
@@ -58,7 +58,7 @@ class TransferServiceTest {
     @Test
     void doWithdrawSuccess() {
         transferService.withdraw(new WithdrawInfoPacket(EXISTING_FIRST.getId(), NORMAL_TRANSFER_AMOUNT));
-        assertEquals(EXISTING_FIRST.getBalance() - NORMAL_TRANSFER_AMOUNT, accountService.getOne(EXISTING_FIRST.getId()).getBalance());
+        assertEquals(EXISTING_FIRST.getBalance().subtract(NORMAL_TRANSFER_AMOUNT), accountService.getOne(EXISTING_FIRST.getId()).getBalance());
     }
 
     @Test
@@ -74,7 +74,7 @@ class TransferServiceTest {
     @Test
     void doDepositSuccess() {
         transferService.deposit(new DepositInfoPacket(EXISTING_FIRST.getId(), NORMAL_TRANSFER_AMOUNT));
-        assertEquals(EXISTING_FIRST.getBalance() + NORMAL_TRANSFER_AMOUNT, accountService.getOne(EXISTING_FIRST.getId()).getBalance());
+        assertEquals(EXISTING_FIRST.getBalance().add(NORMAL_TRANSFER_AMOUNT), accountService.getOne(EXISTING_FIRST.getId()).getBalance());
     }
 
     @Test

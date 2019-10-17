@@ -7,6 +7,7 @@ import com.themescaline.moneytransfer.exceptions.ExceptionMessage;
 import com.themescaline.moneytransfer.model.Account;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -37,7 +38,7 @@ public class InMemoryAccountDAO implements AccountDAO {
 
     @Override
     public Account save(Account account) {
-        if (account.getBalance() < 0) {
+        if (account.getBalance().compareTo(BigDecimal.ZERO) < 0) {
             throw new BalanceException(NEGATIVE_BALANCE);
         }
         account.setId(counter.incrementAndGet());
@@ -47,7 +48,7 @@ public class InMemoryAccountDAO implements AccountDAO {
 
     @Override
     public Account update(Account account) {
-        if (account.getBalance() < 0) {
+        if (account.getBalance().compareTo(BigDecimal.ZERO) < 0) {
             throw new BalanceException(NEGATIVE_BALANCE);
         }
         if (null == storage.replace(account.getId(), account)) {
@@ -64,7 +65,7 @@ public class InMemoryAccountDAO implements AccountDAO {
     }
 
     @Override
-    public void transfer(long fromAccountId, long toAccountId, double amount) {
+    public void transfer(long fromAccountId, long toAccountId, BigDecimal amount) {
         Account from = storage.get(fromAccountId);
         Account to = storage.get(toAccountId);
         if (from == null) {
@@ -73,35 +74,35 @@ public class InMemoryAccountDAO implements AccountDAO {
         if (to == null) {
             throw new AccountNotFoundException(toAccountId);
         }
-        if (from.getBalance() < amount) {
+        if (from.getBalance().compareTo(amount) < 0) {
             throw new BalanceException(ExceptionMessage.NOT_ENOUGH_MONEY, String.valueOf(fromAccountId));
         }
-        from.setBalance(from.getBalance() - amount);
-        to.setBalance(to.getBalance() + amount);
+        from.setBalance(from.getBalance().subtract(amount));
+        to.setBalance(to.getBalance().add(amount));
         storage.put(from.getId(), from);
         storage.put(to.getId(), to);
     }
 
     @Override
-    public void withdraw(long accountId, double amount) {
+    public void withdraw(long accountId, BigDecimal amount) {
         Account from = storage.get(accountId);
         if (from == null) {
             throw new AccountNotFoundException(accountId);
         }
-        if (from.getBalance() < amount) {
+        if (from.getBalance().compareTo(amount) < 0) {
             throw new BalanceException(ExceptionMessage.NOT_ENOUGH_MONEY, String.valueOf(accountId));
         }
-        from.setBalance(from.getBalance() - amount);
+        from.setBalance(from.getBalance().subtract(amount));
         storage.put(from.getId(), from);
     }
 
     @Override
-    public void deposit(long accountId, double amount) {
+    public void deposit(long accountId, BigDecimal amount) {
         Account to = storage.get(accountId);
         if (to == null) {
             throw new AccountNotFoundException(accountId);
         }
-        to.setBalance(to.getBalance() + amount);
+        to.setBalance(to.getBalance().add(amount));
         storage.put(to.getId(), to);
     }
 

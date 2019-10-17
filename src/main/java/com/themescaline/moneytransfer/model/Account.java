@@ -3,6 +3,7 @@ package com.themescaline.moneytransfer.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import java.math.BigDecimal;
 
 /**
  * Main entity - bank account
@@ -30,9 +32,9 @@ public class Account {
     private Long id;
 
     @Column(name = "balance")
-    private Double balance;
+    private BigDecimal balance;
 
-    public Account(Double balance) {
+    public Account(BigDecimal balance) {
         this.balance = balance;
     }
 

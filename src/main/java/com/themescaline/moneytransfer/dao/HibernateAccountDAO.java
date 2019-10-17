@@ -9,6 +9,7 @@ import com.themescaline.moneytransfer.util.multithread.AccountLocker;
 import com.themescaline.moneytransfer.util.multithread.TryCatchWrapper;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -75,39 +76,39 @@ public class HibernateAccountDAO implements AccountDAO {
     }
 
     @Override
-    public void transfer(long fromAccountId, long toAccountId, double amount) {
+    public void transfer(long fromAccountId, long toAccountId, BigDecimal amount) {
         TryCatchWrapper.wrapWithDoubleLock(service, fromAccountId, toAccountId, currentLockedAccounts, session -> {
             Account fromAccount = session.find(Account.class, fromAccountId);
             Account toAccount = session.find(Account.class, toAccountId);
             checkNotFound(fromAccount, fromAccountId);
             checkNotFound(toAccount, toAccountId);
             checkNotEnoughMoney(amount, fromAccount);
-            fromAccount.setBalance(fromAccount.getBalance() - amount);
+            fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
             session.merge(fromAccount);
-            toAccount.setBalance(toAccount.getBalance() + amount);
+            toAccount.setBalance(toAccount.getBalance().add(amount));
             session.merge(toAccount);
             return null;
         });
     }
 
     @Override
-    public void withdraw(long accountId, double amount) {
+    public void withdraw(long accountId, BigDecimal amount) {
         TryCatchWrapper.wrapWithSingleLock(service, accountId, currentLockedAccounts, session -> {
             Account account = session.find(Account.class, accountId);
             checkNotFound(account, accountId);
             checkNotEnoughMoney(amount, account);
-            account.setBalance(account.getBalance() - amount);
+            account.setBalance(account.getBalance().subtract(amount));
             session.merge(account);
             return null;
         });
     }
 
     @Override
-    public void deposit(long accountId, double amount) {
+    public void deposit(long accountId, BigDecimal amount) {
         TryCatchWrapper.wrapWithSingleLock(service, accountId, currentLockedAccounts, session -> {
             Account account = session.find(Account.class, accountId);
             checkNotFound(account, accountId);
-            account.setBalance(account.getBalance() + amount);
+            account.setBalance(account.getBalance().add(amount));
             session.merge(account);
             return null;
         });
@@ -119,8 +120,8 @@ public class HibernateAccountDAO implements AccountDAO {
         }
     }
 
-    private void checkNotEnoughMoney(double amount, Account account) {
-        if (account.getBalance() < amount) {
+    private void checkNotEnoughMoney(BigDecimal amount, Account account) {
+        if (account.getBalance().compareTo(amount) < 0) {
             throw new BalanceException(NOT_ENOUGH_MONEY, String.valueOf(account.getId()));
         }
     }

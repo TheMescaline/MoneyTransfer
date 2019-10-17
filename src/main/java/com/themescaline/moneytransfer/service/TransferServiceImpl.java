@@ -9,6 +9,7 @@ import com.themescaline.moneytransfer.model.TransferInfoPacket;
 import com.themescaline.moneytransfer.model.WithdrawInfoPacket;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 
 import static com.themescaline.moneytransfer.exceptions.ExceptionMessage.NEGATIVE_DEPOSIT;
@@ -32,7 +33,7 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     public void transfer(TransferInfoPacket packet) {
-        if (packet.getAmount() < 0) {
+        if (packet.getAmount().compareTo(BigDecimal.ZERO) < 0) {
             throw new IncorrectDataPacketException(NEGATIVE_TRANSFER);
         }
         log.info(MessageFormat.format("Processing request of transferring {0} from account ID {1} to account ID {2}", packet.getAmount(), packet.getFromAccountId(), packet.getToAccountId()));
@@ -41,7 +42,7 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     public void withdraw(WithdrawInfoPacket packet) {
-        if (packet.getAmount() < 0) {
+        if (packet.getAmount().compareTo(BigDecimal.ZERO) < 0) {
             throw new IncorrectDataPacketException(NEGATIVE_WITHDRAW);
         }
         log.info(MessageFormat.format("Processing request of withdrawing {0} from account ID {1}", packet.getAmount(), packet.getAccountId()));
@@ -50,7 +51,7 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     public void deposit(DepositInfoPacket packet) {
-        if (packet.getAmount() < 0) {
+        if (packet.getAmount().compareTo(BigDecimal.ZERO) < 0) {
             throw new IncorrectDataPacketException(NEGATIVE_DEPOSIT);
         }
         log.info(MessageFormat.format("Processing request of depositing {0} to account ID {1}", packet.getAmount(), packet.getAccountId()));

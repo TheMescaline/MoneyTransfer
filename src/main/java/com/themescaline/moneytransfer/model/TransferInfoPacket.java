@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.math.BigDecimal;
 
 /**
  * Entity for transfer operations. Can be stored in DB as transfer operations audit if needed
@@ -18,5 +19,5 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class TransferInfoPacket {
     private Long fromAccountId;
     private Long toAccountId;
-    private Double amount;
+    private BigDecimal amount;
 }

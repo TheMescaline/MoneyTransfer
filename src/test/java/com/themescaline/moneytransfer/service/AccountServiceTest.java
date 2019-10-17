@@ -66,18 +66,18 @@ class AccountServiceTest {
 
     @Test
     void saveIncorrectBalance() {
-        assertThrows(BalanceException.class, () -> accountService.save(new Account(EXISTING_THIRD.getId(), EXISTING_THIRD.getBalance() - EXCEEDED_TRANSFER_AMOUNT)));
+        assertThrows(BalanceException.class, () -> accountService.save(new Account(EXISTING_THIRD.getId(), EXISTING_THIRD.getBalance().subtract(EXCEEDED_TRANSFER_AMOUNT))));
     }
 
     @Test
     void updateOk() {
-        Account updated = new Account(EXISTING_FIRST.getId(), EXISTING_FIRST.getBalance() + NORMAL_TRANSFER_AMOUNT);
+        Account updated = new Account(EXISTING_FIRST.getId(), EXISTING_FIRST.getBalance().add(NORMAL_TRANSFER_AMOUNT));
         assertEquals(updated, accountService.update(updated.getId(), updated));
     }
 
     @Test
     void updateNotExisted() {
-        Account updated = new Account(NOT_EXISTING.getId(), NOT_EXISTING.getBalance() + NORMAL_TRANSFER_AMOUNT);
+        Account updated = new Account(NOT_EXISTING.getId(), NOT_EXISTING.getBalance().add(NORMAL_TRANSFER_AMOUNT));
         assertThrows(AccountNotFoundException.class, () -> accountService.update(updated.getId(), updated));
     }
 
