@@ -15,7 +15,7 @@
         <lombok.version>1.18.10</lombok.version>
         <hibernate-entitymanager.version>5.4.24.Final</hibernate-entitymanager.version>
         <hibernate-validator.version>6.0.20.Final</hibernate-validator.version>
-        <h2.version>1.4.199</h2.version>
+        <h2.version>2.1.210</h2.version>
         <slf4j-api.version>1.7.28</slf4j-api.version>
         <guice.version>4.0</guice.version>
         <junit.jupiter.version>5.4.1</junit.jupiter.version>
