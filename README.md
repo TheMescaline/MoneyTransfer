@@ -1,4 +1,4 @@
-# Money Transfer [![Build Status](https://travis-ci.org/TheMescaline/vtb-medical-guide.svg?branch=master)](https://travis-ci.org/TheMescaline/vtb-medical-guide) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/c48f8cde7eaa466a81351251084080e4)](https://www.codacy.com/manual/TheMescaline/MoneyTransfer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TheMescaline/MoneyTransfer&amp;utm_campaign=Badge_Grade)
+# Money Transfer [![Build Status](https://travis-ci.org/TheMescaline/vtb-medical-guide.svg?branch=master)](https://travis-ci.org/TheMescaline/vtb-medical-guide) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/49a02c01596f402a908cc1701674ddd8)](https://www.codacy.com/gh/TheMescaline/MoneyTransfer/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TheMescaline/MoneyTransfer&amp;utm_campaign=Badge_Grade)
 
 Simple RESTful API application for money transfer operations and accounts management.
 
