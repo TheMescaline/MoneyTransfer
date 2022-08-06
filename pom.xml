@@ -29,7 +29,7 @@
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <snakeyaml.version>1.26</snakeyaml.version>
-        <postgresql.version>42.3.3</postgresql.version>
+        <postgresql.version>42.4.1</postgresql.version>
         <mysql-connector-java.version>8.0.17</mysql-connector-java.version>
     </properties>
 
